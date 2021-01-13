@@ -40,14 +40,15 @@ Decipher allows users to chat in different languages and overcome language barri
    npm start
    ``` -->
 
-1. Create a keys.js file in the config folder
-2. Paste the following template
+1. Create a config folder in root directory
+2. Create a keys.js file in the config folder
+3. Paste the following template
    ```sh
    module.exports = {
    mongoURI: "",
    };
    ```
-3. Enter your MongoURI (can get one from MongoDB Atlas)
+4. Enter your MongoURI (can get one from MongoDB Atlas)
 
 <!-- CONTACT -->
 
