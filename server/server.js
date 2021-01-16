@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const keys = require("./config/keys");
 
 // Routes
-const userRouter = require("./routes/userRoutes");
+const userRouter = require("./routes/authRoute");
 
 // Connecting to remote Mongo database
 mongoose.connect(keys.mongoURI, {
