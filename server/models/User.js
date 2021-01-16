@@ -33,10 +33,8 @@ const userSchema = new mongoose.Schema({
 
 // Checks to see if a user's email and password matches upon login
 userSchema.statics.findByCredentials = async (email, password) => {
-	console.log(`Email: ${email}`);
-	console.log(`Password: ${password}`);
 	const user = await User.findOne({ email });
-	console.log(user);
+
 	if (!user) throw new Error("Incorrect information");
 
 	const isMatch = await bcrypt.compare(password, user.password);
