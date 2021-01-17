@@ -15,7 +15,8 @@ const auth = async (req, res, next) => {
 
 		if (!user) throw new Error();
 
-		// Giving route handlers access to the user
+		// Giving route handlers access to user model and token
+		req.token = token;
 		req.user = user;
 		next();
 	} catch (err) {

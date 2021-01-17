@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const uniqueValidator = require("mongoose-unique-validator");
 
 const userSchema = new mongoose.Schema({
 	firstName: {
@@ -58,16 +59,14 @@ userSchema.statics.findByCredentials = async (email, password) => {
 	const user = await User.findOne({ email });
 
 	if (!user) throw new Error("Incorrect information");
-
 	const isMatch = await bcrypt.compare(password, user.password);
-
 	if (!isMatch) throw new Error("Incorrect information");
 
 	return user;
 };
 
 // Our middleware for hashing passwords
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async function (next, err) {
 	const user = this;
 
 	if (user.isModified("password"))
@@ -75,6 +74,8 @@ userSchema.pre("save", async function (next) {
 
 	next();
 });
+
+userSchema.plugin(uniqueValidator);
 
 const User = mongoose.model("users", userSchema);
 module.exports = User;
