@@ -31,6 +31,9 @@ const userSchema = new mongoose.Schema({
 		trim: true,
 		minLength: 6
 	},
+	avatar: {
+		type: Buffer
+	},
 	// Lets users sign in on multiple devices w/ invalidating other tokens
 	tokens: [
 		{
@@ -41,6 +44,19 @@ const userSchema = new mongoose.Schema({
 		}
 	]
 });
+
+// Strips sensitive information when returning user
+userSchema.methods.toJSON = function () {
+	const user = this;
+	const userObject = user.toObject();
+
+	// Removing unnecessary information for the user to have
+	delete userObject.password;
+	delete userObject.tokens;
+	// delete userObject.avatar;
+
+	return userObject;
+};
 
 // Generating an auth token for our user
 userSchema.methods.generateAuthToken = async function () {
@@ -75,6 +91,7 @@ userSchema.pre("save", async function (next, err) {
 	next();
 });
 
+// Adds an error message if we try to save over a unique value
 userSchema.plugin(uniqueValidator);
 
 const User = mongoose.model("users", userSchema);

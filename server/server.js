@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 const keys = require("./config/keys");
 
 // Routes
-const userRouter = require("./routes/authRoute");
+const authRouter = require("./routes/authRoute");
+const userRouter = require("./routes/userRoute");
 
 // Connecting to remote Mongo database
 mongoose.connect(keys.mongoURI, {
@@ -19,6 +20,7 @@ const app = express();
 app.use(express.json());
 
 // Initializing Routes
+app.use(authRouter);
 app.use(userRouter);
 
 // Starting our server
