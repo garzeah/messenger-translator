@@ -2,7 +2,7 @@ const express = require("express");
 const router = new express.Router();
 
 const User = require("../models/User");
-const auth = require("../middlewares/auth");
+const verifyToken = require("../middlewares/verifyToken");
 
 // User register
 router.post("/register", async (req, res) => {
@@ -13,7 +13,7 @@ router.post("/register", async (req, res) => {
 		const token = await user.generateAuthToken();
 		res.status(201).send({ user, token });
 	} catch (err) {
-		res.status(400).send(err);
+		res.sendStatus(400);
 	}
 });
 
@@ -27,22 +27,7 @@ router.post("/login", async (req, res) => {
 		const token = await user.generateAuthToken();
 		res.status(200).send({ user, token });
 	} catch (err) {
-		res.status(400).send(err);
-	}
-});
-
-// User logout
-router.post("/logout", auth, async (req, res) => {
-	try {
-		// Only removing a specific token in case a user is signed into multiple devices
-		req.user.tokens = req.user.tokens.filter(
-			(token) => token.token !== req.token
-		);
-		await req.user.save();
-
-		res.send();
-	} catch (err) {
-		res.status(500).send();
+		res.sendStatus(400);
 	}
 });
 

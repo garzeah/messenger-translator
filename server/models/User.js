@@ -33,39 +33,25 @@ const userSchema = new mongoose.Schema({
 	},
 	avatar: {
 		type: Buffer
-	},
-	// Lets users sign in on multiple devices w/ invalidating other tokens
-	tokens: [
-		{
-			token: {
-				type: String,
-				required: true
-			}
-		}
-	]
+	}
 });
 
-// Strips sensitive information when returning user
+// Strips sensitive information when returning user on every request
 userSchema.methods.toJSON = function () {
-	const user = this;
-	const userObject = user.toObject();
+	const userObject = this.toObject();
 
 	// Removing unnecessary information for the user to have
 	delete userObject.password;
-	delete userObject.tokens;
-	// delete userObject.avatar;
 
 	return userObject;
 };
 
 // Generating an auth token for our user
 userSchema.methods.generateAuthToken = async function () {
-	const user = this;
-	const token = jwt.sign({ _id: user._id.toString() }, "myToken");
-
-	// Concatenating and saving it to our document
-	user.tokens = user.tokens.concat({ token: token });
-	await user.save();
+	const token = jwt.sign(
+		{ _id: this._id.toString() },
+		process.env.ACCESS_TOKEN_SECRET
+	);
 
 	return token;
 };

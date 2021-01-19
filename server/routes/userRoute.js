@@ -18,24 +18,25 @@ const upload = multer({
 });
 
 const User = require("../models/User");
-const auth = require("../middlewares/auth");
+const verifyToken = require("../middlewares/verifyToken");
 
 // Retrieve all profiles
-router.get("/users", auth, async (req, res) => {
+router.get("/users", verifyToken, async (req, res) => {
 	// Retrieves all user profiles and omits their id
 	const users = await User.find({}, { _id: 0 });
 	res.send(users);
 });
 
 // Retrieve your own profile
-router.get("/users/me", auth, async (req, res) => {
-	res.send(req.user);
+router.get("/users/me", verifyToken, async (req, res) => {
+	const user = await User.findById({ _id: req.user._id });
+	res.send(user);
 });
 
 // Upload Avatar
 router.post(
 	"/users/me/avatar",
-	auth,
+	verifyToken,
 	upload.single("avatar"),
 	async (req, res) => {
 		// Using sharp to convert image to png, and resize it to 250x250
@@ -45,8 +46,7 @@ router.post(
 			.toBuffer();
 
 		// Saving a user's avatar
-		req.user.avatar = buffer;
-		await req.user.save();
+		await User.findByIdAndUpdate({ _id: req.user._id }, { avatar: buffer });
 		res.send();
 	},
 	(err, req, res, next) => {
@@ -54,16 +54,8 @@ router.post(
 	}
 );
 
-// Delete Avatar
-router.delete("/users/me/avatar", auth, async (req, res) => {
-	// Deleting a user's avatar
-	req.user.avatar = undefined;
-	await req.user.save();
-	res.send();
-});
-
 // Fetch Avatar
-router.get("/users/:id/avatar", auth, async (req, res) => {
+router.get("/users/:id/avatar", verifyToken, async (req, res) => {
 	try {
 		const user = await User.findById(req.params.id);
 
@@ -72,7 +64,7 @@ router.get("/users/:id/avatar", auth, async (req, res) => {
 		res.set("Content-Type", "image/png");
 		res.send(user.avatar);
 	} catch (err) {
-		res.status(404).send();
+		res.sendStatus(404);
 	}
 });
 
