@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const keys = require("./config/keys");
+require("dotenv").config();
 
 // Routes
 const authRouter = require("./routes/authRoute");
@@ -10,7 +11,8 @@ const userRouter = require("./routes/userRoute");
 mongoose.connect(keys.mongoURI, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
-	useCreateIndex: true
+	useCreateIndex: true,
+	useFindAndModify: false
 });
 
 // Initializing express
