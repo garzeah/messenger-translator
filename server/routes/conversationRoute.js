@@ -6,7 +6,7 @@ const Conversation = require("../models/Conversation");
 const verifyToken = require("../middlewares/verifyToken");
 
 // Create a conversation
-router.post("/conversation/new/", verifyToken, async (req, res) => {
+router.post("/conversations/new/", verifyToken, async (req, res) => {
 	// Retrieving the ._ids of the person initiating and receiving the conversation
 	const sender = await User.findById({ _id: req.user._id });
 	const receiver = await User.findOne({ email: req.body.email });
@@ -34,5 +34,11 @@ router.post("/conversation/new/", verifyToken, async (req, res) => {
 	await newConversation.save();
 	res.send(conversation);
 });
+
+// Send message
+router.post("/conversations/:id", (req, res) => {});
+
+// Get all conversations for a user
+router.get("/conversations/", (req, res) => {});
 
 module.exports = router;

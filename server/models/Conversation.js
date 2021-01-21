@@ -4,8 +4,8 @@ const conversationSchema = new mongoose.Schema({
 	participants: [
 		{
 			participant: {
-				type: String
-				// ref: "User"
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "User"
 			}
 		}
 	]
