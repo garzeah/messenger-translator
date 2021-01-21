@@ -40,7 +40,13 @@ router.post("/conversations/new/", verifyToken, async (req, res) => {
 });
 
 // Get all conversations for a user
-router.get("/conversations/", (req, res) => {});
+router.get("/conversations/", verifyToken, async (req, res) => {
+	// Finds all conversations the user is associated with
+	const conversations = await Conversation.find({
+		"participants.participant": req.user._id
+	});
+	res.send(conversations);
+});
 
 // Get a specific conversation
 router.get("/conversations/:id", (req, res) => {});
