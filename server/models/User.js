@@ -43,6 +43,9 @@ userSchema.methods.toJSON = function () {
 	// Removing unnecessary information for the user to have
 	delete userObject.password;
 
+	// REMOVE LATER
+	delete userObject.avatar;
+
 	return userObject;
 };
 

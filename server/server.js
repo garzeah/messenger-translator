@@ -6,6 +6,7 @@ require("dotenv").config();
 // Routes
 const authRouter = require("./routes/authRoute");
 const userRouter = require("./routes/userRoute");
+const conversationRouter = require("./routes/conversationRoute");
 
 // Connecting to remote Mongo database
 mongoose.connect(keys.mongoURI, {
@@ -24,6 +25,7 @@ app.use(express.json());
 // Initializing Routes
 app.use(authRouter);
 app.use(userRouter);
+app.use(conversationRouter);
 
 // Starting our server
 const PORT = process.env.PORT || 5000;
