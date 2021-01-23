@@ -6,7 +6,7 @@ const Conversation = require("../models/Conversation");
 const verifyToken = require("../middlewares/verifyToken");
 
 // Create a conversation
-router.post("/conversations/new/", verifyToken, async (req, res) => {
+router.post("/api/conversations/new/", verifyToken, async (req, res) => {
 	try {
 		// Retrieving the ._ids of the person initiating and receiving the conversation
 		const sender = await User.findById({ _id: req.user._id });
@@ -40,7 +40,7 @@ router.post("/conversations/new/", verifyToken, async (req, res) => {
 });
 
 // Get all conversations for a user
-router.get("/conversations/", verifyToken, async (req, res) => {
+router.get("/api/conversations/", verifyToken, async (req, res) => {
 	// Finds all conversations the user is associated with
 	const conversations = await Conversation.find({
 		"participants.participant": req.user._id
@@ -49,9 +49,9 @@ router.get("/conversations/", verifyToken, async (req, res) => {
 });
 
 // Get a specific conversation
-router.get("/conversations/:id", (req, res) => {});
+router.get("/api/conversations/:id", (req, res) => {});
 
 // Send message
-router.post("/conversations/:id", (req, res) => {});
+router.post("/api/conversations/:id", (req, res) => {});
 
 module.exports = router;

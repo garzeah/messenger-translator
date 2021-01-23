@@ -21,21 +21,21 @@ const User = require("../models/User");
 const verifyToken = require("../middlewares/verifyToken");
 
 // Retrieve all profiles
-router.get("/users", verifyToken, async (req, res) => {
+router.get("/api/users", verifyToken, async (req, res) => {
 	// Retrieves all user profiles and omits their id
 	const users = await User.find({}, { _id: 0 });
 	res.send(users);
 });
 
 // Retrieve your own profile
-router.get("/users/me", verifyToken, async (req, res) => {
+router.get("/api/users/me", verifyToken, async (req, res) => {
 	const user = await User.findById({ _id: req.user._id });
 	res.send(user);
 });
 
 // Upload Avatar
 router.post(
-	"/users/me/avatar",
+	"/api/users/me/avatar",
 	verifyToken,
 	upload.single("avatar"),
 	async (req, res) => {
@@ -55,7 +55,7 @@ router.post(
 );
 
 // Fetch Avatar
-router.get("/users/:id/avatar", verifyToken, async (req, res) => {
+router.get("/api/users/:id/avatar", verifyToken, async (req, res) => {
 	try {
 		const user = await User.findById(req.params.id);
 
