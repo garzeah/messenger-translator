@@ -1,0 +1,69 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap");
+
+/* General Styles */
+h2 {
+	font-family: "Open Sans Semi-bold";
+	font-size: 30px;
+}
+
+.boxShadow {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	text-transform: none;
+}
+
+.header {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	color: grey;
+}
+
+.authButton {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+/* Tablet/Desktop view */
+@media (min-width: 768px) {
+	.pageContainer {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.advertisementContainer {
+		position: relative;
+		background-image: linear-gradient(#3a8dff, #86b9ff);
+	}
+
+	.advertisementContainer img {
+		width: 500px;
+		height: 100%;
+		opacity: 15%;
+	}
+
+	#advertisementText {
+		position: absolute;
+		font-size: 35px;
+		text-align: center;
+		color: white;
+		margin: 0;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		width: 80%;
+		line-height: 1.5;
+	}
+
+	.formContainer {
+		display: flex;
+		flex-direction: column;
+		height: 100vh;
+		width: 100%;
+		margin: 5px 10px;
+	}
+}
+
+/* Mobile View */
+@media (max-width: 767px) {
+}
