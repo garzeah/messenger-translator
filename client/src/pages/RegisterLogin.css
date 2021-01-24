@@ -28,20 +28,17 @@ h2 {
 @media (min-width: 768px) {
 	.pageContainer {
 		display: flex;
-		justify-content: space-between;
 	}
 
 	.advertisementContainer {
 		position: relative;
 		background-image: linear-gradient(#3a8dff, #86b9ff);
 	}
-
-	.advertisementContainer img {
+	*/ .advertisementContainer img {
 		width: 400px;
 		opacity: 15%;
 	}
-
-	#advertisementText {
+	*/ #advertisementText {
 		position: absolute;
 		font-size: 30px;
 		text-align: center;
@@ -64,5 +61,5 @@ h2 {
 }
 
 /* Mobile View */
-@media (max-width: 767px) {
-}
+/* @media (max-width: 767px) {
+} */
