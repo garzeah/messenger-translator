@@ -8,23 +8,23 @@ const verifyToken = require("../middlewares/verifyToken");
 // Create a conversation
 router.post("/conversations/new/", verifyToken, async (req, res) => {
 	try {
-		// Retrieving the ._ids of the person initiating and receiving the conversation
-		const sender = await User.findById({ _id: req.user._id });
 		const receiver = await User.findOne({ email: req.body.email });
 
 		// Checking to see if conversation already exists
 		const conversation = await Conversation.findOne({
-			"participants.participant": sender._id,
+			// Saving Sender and Reciver's ID
+			"participants.participant": req.user._id,
 			"participants.participant": receiver._id
 		});
 
+		// If a conversation already exists, return that conversation
 		if (conversation) return res.send(conversation);
 
 		// Otherwise, lets create a new conversation and save it
 		const newConversation = new Conversation({
 			participants: [
 				{
-					participant: sender._id
+					participant: req.user._id
 				},
 				{
 					participant: receiver._id
