@@ -1,25 +1,38 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import { Button, TextField, Box } from "@material-ui/core";
+import * as EmailValidator from "email-validator";
 import axios from "axios";
 
 import "./RegisterLogin.css";
 import backgroundImage from "../assets/images/bg-img.png";
 
 const Register = () => {
-	const [inputValues, setInputValues] = useState({});
+	const [inputValues, setInputValues] = useState({
+		firstName: "",
+		lastName: "",
+		email: "",
+		password: "",
+		confirmPassword: ""
+	});
 
+	const { password, confirmPassword } = inputValues;
+
+	// Stores data in our input state
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setInputValues({ ...inputValues, [name]: value });
 	};
 
-	const handleSubmit = () => {};
-
-	useEffect(() => {
-		console.log(inputValues);
-	}, [inputValues]);
+	// Sends data to our back end server
+	const handleSubmit = async () => {
+		try {
+			await axios.post("/api/register", inputValues);
+		} catch (err) {
+			alert(err);
+		}
+	};
 
 	// Responsive breakpoints
 	const isMobile = useMediaQuery({
@@ -28,6 +41,17 @@ const Register = () => {
 	const isTabletDesktop = useMediaQuery({
 		query: "(min-device-width: 768px)"
 	});
+
+	// Error handling for password (must match and 6 chars minimum) for material-ui
+	let validPassword =
+		password !== confirmPassword ||
+		(password.length > 0 && password.length < 6) ||
+		(confirmPassword.length > 0 && confirmPassword.length < 6);
+
+	// Text explaining error
+	let validPasswordHelperText = validPassword
+		? "Passwords must match and be greater than 6 characters"
+		: "";
 
 	// JSX pertaining to our form
 	const formContainer = (
@@ -53,57 +77,62 @@ const Register = () => {
 				<h2>Create an account.</h2>
 				<Box mt={2}>
 					<TextField
+						label="First Name"
+						name="firstName"
 						onChange={handleChange}
-						required
-						name="username"
-						label="Username"
 						fullWidth
 					/>
 				</Box>
 				<Box mt={2}>
 					<TextField
+						label="Last Name"
+						name="lastName"
 						onChange={handleChange}
-						required
-						type="email"
+						fullWidth
+					/>
+				</Box>
+				<Box mt={2}>
+					<TextField
+						label="Email"
 						name="email"
-						label="E-mail address"
-						fullWidth
-					/>
-				</Box>
-				<Box mt={2}>
-					<TextField
 						onChange={handleChange}
-						error={inputValues.password !== inputValues.confirmPassword}
+						error={
+							!EmailValidator.validate(inputValues.email) &&
+							inputValues.email !== ""
+						}
 						helperText={
-							inputValues.password !== inputValues.confirmPassword
-								? "Passwords do not match!"
+							!EmailValidator.validate(inputValues.email) &&
+							inputValues.email !== ""
+								? "Enter a valid email address"
 								: ""
 						}
-						required
-						type="password"
-						name="password"
-						label="Password"
 						fullWidth
+					/>
+				</Box>
+				<Box mt={2}>
+					<TextField
+						label="Password"
+						name="password"
+						type="password"
+						onChange={handleChange}
+						fullWidth
+						error={validPassword}
+						helperText={validPasswordHelperText}
 					/>
 				</Box>
 				<Box mt={2} mb={4}>
 					<TextField
-						onChange={handleChange}
-						error={inputValues.password !== inputValues.confirmPassword}
-						helperText={
-							inputValues.password !== inputValues.confirmPassword
-								? "Passwords do not match!"
-								: ""
-						}
-						required
-						type="password"
-						name="confirmPassword"
 						label="Confirm Password"
+						name="confirmPassword"
+						type="password"
+						onChange={handleChange}
 						fullWidth
+						error={validPassword}
 					/>
 				</Box>
 				<div className="authButton">
 					<Button
+						onClick={handleSubmit}
 						style={{
 							padding: "15px 60px",
 							background: "#3A8DFF",

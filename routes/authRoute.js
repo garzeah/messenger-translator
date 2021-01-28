@@ -7,6 +7,7 @@ const User = require("../models/User");
 router.post("/api/register", async (req, res) => {
 	const user = new User(req.body);
 
+	// Saving user and giving them a JWT
 	try {
 		await user.save();
 		const token = await user.generateAuthToken();
