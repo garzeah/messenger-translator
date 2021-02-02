@@ -153,9 +153,9 @@ const Register = () => {
 	const registerMobile = <div className="pageContainer">{formContainer}</div>;
 	const registerTabletDesktop = (
 		<div className="pageContainer">
-			<div className="advertisementContainer">
+			<div className="sideContainer">
 				<img src={backgroundImage} alt="background"></img>
-				<p id="advertisementText">Converse with anyone with any language</p>
+				<p id="sideText">Converse with anyone with any language</p>
 			</div>
 			{formContainer}
 		</div>

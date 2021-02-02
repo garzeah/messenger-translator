@@ -30,17 +30,17 @@ h2 {
 		display: flex;
 	}
 
-	.advertisementContainer {
+	.sideContainer {
 		position: relative;
 		background-image: linear-gradient(#3a8dff, #86b9ff);
 	}
 
-	.advertisementContainer img {
+	.sideContainer img {
 		width: 400px;
 		opacity: 15%;
 	}
 
-	#advertisementText {
+	#sideText {
 		position: absolute;
 		font-size: 30px;
 		text-align: center;
