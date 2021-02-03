@@ -2,34 +2,32 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const uniqueValidator = require("mongoose-unique-validator");
+// const uniqueValidator = require("mongoose-unique-validator");
 
 const userSchema = new mongoose.Schema({
 	firstName: {
 		type: String,
-		required: true,
+		required: [true, "Please enter your first name"],
 		trim: true
 	},
 	lastName: {
 		type: String,
-		required: true,
+		required: [true, "Please enter your last name"],
 		trim: true
 	},
 	email: {
 		type: String,
 		unique: true,
-		required: true,
+		required: [true, "Please enter an email"],
 		trim: true,
 		lowercase: true,
-		validate(email) {
-			if (!validator.isEmail(email)) throw new Error("Email is invalid");
-		}
+		validate: [validator.isEmail, "Please enter a valid email"]
 	},
 	password: {
 		type: String,
-		required: true,
+		required: [true, "Please enter a password"],
 		trim: true,
-		minLength: 6
+		minLength: [6, "Minimum password length is 6 characters"]
 	},
 	avatar: {
 		type: Buffer
@@ -81,7 +79,7 @@ userSchema.pre("save", async function (next, err) {
 });
 
 // Adds an error message if we try to save over a unique value
-userSchema.plugin(uniqueValidator);
+// userSchema.plugin(uniqueValidator);
 
 const User = mongoose.model("users", userSchema);
 module.exports = User;
