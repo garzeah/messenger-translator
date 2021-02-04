@@ -170,9 +170,9 @@ const Register = () => {
 			<div className="sideContainer">
 				<div>
 					<img
-						id="message-img"
+						id="messengerIcon"
 						src={sidebarMessageImage}
-						alt="message symbol"
+						alt="Message Symbol"
 					></img>
 				</div>
 				<p id="sideText">Converse with anyone with any language</p>
