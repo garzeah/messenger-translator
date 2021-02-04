@@ -6,7 +6,7 @@ const verifyToken = (req, res, next) => {
 
 	// Check if JWT exists & is verified
 	if (token) {
-		jwt.verify(token, "myToken", (err, decodedToken) => {
+		jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decodedToken) => {
 			if (err) {
 				res.status(200).json({ success: true, redirectURL: "/login" });
 			} else {
