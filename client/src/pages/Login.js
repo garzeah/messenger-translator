@@ -53,7 +53,7 @@ const Login = () => {
 					</Button>
 				</Link>
 			</Box>
-			<Box mt={10} mx={6}>
+			<Box mt={10} mx={6} px={10}>
 				<h2>Welcome back!</h2>
 				<Box mt={2}>
 					<TextField

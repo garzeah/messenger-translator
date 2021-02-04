@@ -2,7 +2,8 @@
 
 /* General Styles */
 h2 {
-	font-family: "Open Sans Semi-bold";
+	font-family: "Open Sans";
+	font-weight: 600;
 	font-size: 30px;
 }
 
@@ -36,7 +37,7 @@ h2 {
 	}
 
 	.sideContainer img {
-		width: 400px;
+		width: 550px;
 		opacity: 15%;
 	}
 

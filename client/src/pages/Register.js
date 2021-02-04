@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import { Button, TextField, Box } from "@material-ui/core";
 import * as EmailValidator from "email-validator";
-import axios from "axios";
 
 import "./RegisterLogin.css";
 import backgroundImage from "../assets/images/bg-img.png";
@@ -27,13 +26,31 @@ const Register = () => {
 
 	// Sends data to our back end server
 	const handleSubmit = async () => {
+		// Removing confirmPassword before sending data
+		let copyOfInputValues = inputValues;
+		delete copyOfInputValues.confirmPassword;
+
 		try {
-			await axios.post("/api/register", inputValues);
+			// Our data to send to the server
+			const res = await fetch("/api/register", {
+				method: "POST",
+				body: JSON.stringify(copyOfInputValues),
+				headers: { "Content-Type": "application/json" }
+			});
+
+			// Configure later for snackbars
+			// In the event we get an error
+			const data = await res.json();
+			if (data.errors) {
+				console.log(data);
+			}
+
+			// Redirect them to messenger page
+			// history.js stuff
 		} catch (err) {
-			alert(err);
+			console.log(err);
 		}
 	};
-
 	// Responsive breakpoints
 	const isMobile = useMediaQuery({
 		query: "(max-device-width: 767px)"
@@ -50,7 +67,7 @@ const Register = () => {
 
 	// Text explaining error
 	let validPasswordHelperText = validPassword
-		? "Passwords must match and be greater than 6 characters"
+		? "Passwords must match and be at least 6 characters"
 		: "";
 
 	// JSX pertaining to our form
@@ -73,8 +90,8 @@ const Register = () => {
 					</Button>
 				</Link>
 			</Box>
-			<Box mt={10} mx={6}>
-				<h2>Create an account.</h2>
+			<Box mt={10} mx={6} px={10}>
+				<h2>Create an account</h2>
 				<Box mt={2}>
 					<TextField
 						label="First Name"

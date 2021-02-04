@@ -1,5 +1,8 @@
 const User = require("../models/User");
 
+// Age of cookie (7 days)
+const maxAge = 7 * 24 * 60 * 60;
+
 // Handle errors
 const handleErrors = (err) => {
 	let errors = {
@@ -8,6 +11,10 @@ const handleErrors = (err) => {
 		email: "",
 		password: ""
 	};
+
+	// Incorrect email and password validation
+	if (err.message === "Invalid information")
+		errors.email = "Invalid information";
 
 	// In the event we get a duplicate email
 	if (err.code === 11000) {
@@ -32,23 +39,28 @@ module.exports.register_post = async (req, res) => {
 	try {
 		await user.save();
 		const token = await user.generateAuthToken();
-		res.status(201).send({ user, token });
+		// const token = createToken(user._id);
+		res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
+		res.status(201).send({ user: user._id });
+	} catch (err) {
+		const errors = handleErrors(err);
+		res.status(400).send({ errors });
+	}
+};
+
+module.exports.login_post = async (req, res) => {
+	try {
+		const user = await User.login(req.body.email, req.body.password);
+		const token = await user.generateAuthToken();
+		res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
+		res.status(200).json({ user: user._id });
 	} catch (err) {
 		const errors = handleErrors(err);
 		res.status(400).json({ errors });
 	}
 };
 
-module.exports.login_post = async (req, res) => {
-	try {
-		const user = await User.findByCredentials(
-			req.body.email,
-			req.body.password
-		);
-		const token = await user.generateAuthToken();
-		res.status(200).send({ user, token });
-	} catch (err) {
-		const errors = handleErrors(err);
-		res.status(400).json({ errors });
-	}
+module.exports.logout_get = (req, res) => {
+	res.cookie("jwt", "", { maxAge: 1 });
+	res.status(200).json({ success: true, redirectURL: "/login" });
 };

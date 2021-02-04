@@ -58,12 +58,12 @@ userSchema.methods.generateAuthToken = async function () {
 };
 
 // Checks to see if a user's email and password matches upon login
-userSchema.statics.findByCredentials = async (email, password) => {
+userSchema.statics.login = async (email, password) => {
 	const user = await User.findOne({ email });
 
-	if (!user) throw new Error("Incorrect information");
+	if (!user) throw new Error("Invalid information");
 	const isMatch = await bcrypt.compare(password, user.password);
-	if (!isMatch) throw new Error("Incorrect information");
+	if (!isMatch) throw new Error("Invalid information");
 
 	return user;
 };
