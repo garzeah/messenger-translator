@@ -167,7 +167,7 @@ const Register = () => {
 
 	return (
 		<div className="pageContainer">
-			<div className="sideContainer">
+			<div className="sideContainer" style={{ marginBottom: "30px" }}>
 				<div>
 					<img
 						id="messengerIcon"
