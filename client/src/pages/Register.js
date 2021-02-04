@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useMediaQuery } from "react-responsive";
 import { Button, TextField, Box } from "@material-ui/core";
 import * as EmailValidator from "email-validator";
 
 import "./RegisterLogin.css";
-import backgroundImage from "../assets/images/bg-img.png";
+import sidebarMessageImage from "../assets/images/message.png";
 
 const Register = () => {
 	const [inputValues, setInputValues] = useState({
@@ -51,13 +50,6 @@ const Register = () => {
 			console.log(err);
 		}
 	};
-	// Responsive breakpoints
-	const isMobile = useMediaQuery({
-		query: "(max-device-width: 767px)"
-	});
-	const isTabletDesktop = useMediaQuery({
-		query: "(min-device-width: 768px)"
-	});
 
 	// Error handling for password (must match and 6 chars minimum) for material-ui
 	let validPassword =
@@ -70,6 +62,21 @@ const Register = () => {
 		? "Passwords must match and be at least 6 characters"
 		: "";
 
+	// Styles
+	const styles = {
+		loginButton: {
+			padding: "15px 60px",
+			color: "#3A8DFF",
+			textTransform: "none"
+		},
+		createButton: {
+			padding: "15px 60px",
+			background: "#3A8DFF",
+			textTransform: "none",
+			marginBottom: "30px"
+		}
+	};
+
 	// JSX pertaining to our form
 	const formContainer = (
 		<div className="formContainer">
@@ -77,20 +84,16 @@ const Register = () => {
 				<p style={{ marginRight: "15px" }}>Already have an account?</p>
 				<Link to="/login">
 					<Button
-						style={{
-							padding: "15px 60px",
-							color: "#3A8DFF",
-							textTransform: "none"
-						}}
+						className="boxShadow"
+						style={styles.loginButton}
 						color="primary"
 						size="large"
-						className="boxShadow"
 					>
 						Login
 					</Button>
 				</Link>
 			</Box>
-			<Box mt={10} mx={6} px={10}>
+			<Box mt={7} mx={6}>
 				<h2>Create an account</h2>
 				<Box mt={2}>
 					<TextField
@@ -150,11 +153,7 @@ const Register = () => {
 				<div className="authButton">
 					<Button
 						onClick={handleSubmit}
-						style={{
-							padding: "15px 60px",
-							background: "#3A8DFF",
-							textTransform: "none"
-						}}
+						style={styles.createButton}
 						size="large"
 						variant="contained"
 						color="primary"
@@ -166,22 +165,19 @@ const Register = () => {
 		</div>
 	);
 
-	// JSX for each respective view
-	const registerMobile = <div className="pageContainer">{formContainer}</div>;
-	const registerTabletDesktop = (
+	return (
 		<div className="pageContainer">
 			<div className="sideContainer">
-				<img src={backgroundImage} alt="background"></img>
+				<div>
+					<img
+						id="message-img"
+						src={sidebarMessageImage}
+						alt="message symbol"
+					></img>
+				</div>
 				<p id="sideText">Converse with anyone with any language</p>
 			</div>
 			{formContainer}
-		</div>
-	);
-
-	return (
-		<div>
-			{isMobile && registerMobile}
-			{isTabletDesktop && registerTabletDesktop}
 		</div>
 	);
 };

@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useMediaQuery } from "react-responsive";
 import { Button, TextField, Box } from "@material-ui/core";
-import axios from "axios";
 
+import messengerIcon from "../assets/images/message.png";
 import "./RegisterLogin.css";
-import backgroundImage from "../assets/images/bg-img.png";
 
 const Login = () => {
 	const [inputValues, setInputValues] = useState({});
@@ -17,21 +15,22 @@ const Login = () => {
 	};
 
 	// Sends data to our back end server
-	const handleSubmit = async () => {
-		try {
-			await axios.post("/api/login", inputValues);
-		} catch (err) {
-			alert(err);
+	const handleSubmit = async () => {};
+
+	// Styles
+	const styles = {
+		createAccountButton: {
+			padding: "15px 60px",
+			color: "#3A8DFF",
+			textTransform: "none"
+		},
+		loginButton: {
+			padding: "15px 60px",
+			background: "#3A8DFF",
+			textTransform: "none",
+			marginBottom: "30px"
 		}
 	};
-
-	// Responsive breakpoints
-	const isMobile = useMediaQuery({
-		query: "(max-device-width: 767px)"
-	});
-	const isTabletDesktop = useMediaQuery({
-		query: "(min-device-width: 768px)"
-	});
 
 	// JSX pertaining to our form
 	const formContainer = (
@@ -40,20 +39,16 @@ const Login = () => {
 				<p style={{ marginRight: "15px" }}>Don't have an account?</p>
 				<Link to="/">
 					<Button
-						style={{
-							padding: "15px 60px",
-							color: "#3A8DFF",
-							textTransform: "none"
-						}}
+						className="boxShadow"
+						style={styles.createAccountButton}
 						color="primary"
 						size="large"
-						className="boxShadow"
 					>
 						Create Account
 					</Button>
 				</Link>
 			</Box>
-			<Box mt={10} mx={6} px={10}>
+			<Box mt={7} mx={6}>
 				<h2>Welcome back!</h2>
 				<Box mt={2}>
 					<TextField
@@ -75,11 +70,7 @@ const Login = () => {
 				<div className="authButton">
 					<Button
 						onClick={handleSubmit}
-						style={{
-							padding: "15px 60px",
-							background: "#3A8DFF",
-							textTransform: "none"
-						}}
+						style={styles.loginButton}
 						size="large"
 						variant="contained"
 						color="primary"
@@ -91,22 +82,13 @@ const Login = () => {
 		</div>
 	);
 
-	// JSX for each respective view
-	const registerMobile = <div className="pageContainer">{formContainer}</div>;
-	const registerTabletDesktop = (
+	return (
 		<div className="pageContainer">
 			<div className="sideContainer">
-				<img src={backgroundImage} alt="background"></img>
+				<img id="messengerIcon" src={messengerIcon} alt="Message Symbol"></img>
 				<p id="sideText">Converse with anyone with any language</p>
 			</div>
 			{formContainer}
-		</div>
-	);
-
-	return (
-		<div>
-			{isMobile && registerMobile}
-			{isTabletDesktop && registerTabletDesktop}
 		</div>
 	);
 };
