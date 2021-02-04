@@ -38,7 +38,7 @@ h2 {
 
 	.sideContainer img {
 		width: 550px;
-		opacity: 15%;
+		opacity: 15% !important;
 	}
 
 	#sideText {
