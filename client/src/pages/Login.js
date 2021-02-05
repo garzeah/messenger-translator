@@ -1,12 +1,27 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, TextField, Box } from "@material-ui/core";
+import { Button, TextField, Box, Snackbar } from "@material-ui/core";
+import MuiAlert from "@material-ui/lab/Alert";
 
+import history from "../history";
 import messengerIcon from "../assets/images/message.png";
 import "./RegisterLogin.css";
 
+function Alert(props) {
+	return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 const Login = () => {
-	const [inputValues, setInputValues] = useState({});
+	// State management for input and snackbar
+	const [inputValues, setInputValues] = useState({
+		email: "",
+		password: ""
+	});
+	const [snackbar, setSnackbar] = useState({
+		open: false,
+		severity: "",
+		message: ""
+	});
 
 	// Stores data in out input state
 	const handleChange = (e) => {
@@ -15,7 +30,71 @@ const Login = () => {
 	};
 
 	// Sends data to our back end server
-	const handleSubmit = async () => {};
+	const handleSubmit = async () => {
+		// Checks for missing input
+		if (emptyInput()) {
+			setSnackbar({
+				open: true,
+				severity: "error",
+				message: "Missing input"
+			});
+			return;
+		}
+
+		try {
+			// Our data to send to the server
+			const res = await fetch("/api/login", {
+				method: "POST",
+				body: JSON.stringify(inputValues),
+				headers: { "Content-Type": "application/json" }
+			});
+
+			// Redirect them to messenger page
+			if (res.status === 200) {
+				history.push("/messenger");
+			}
+
+			// In the event we get an error
+			const data = await res.json();
+			if (data.errors) {
+				if (data.errors.email || data.errors.password) {
+					setSnackbar({
+						open: true,
+						severity: "error",
+						message: data.errors.email || data.errors.password
+					});
+				}
+			}
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	// Pressing enter submits our form
+	const handleKeyPress = (e) => {
+		if (e.which === 13) {
+			handleSubmit();
+		}
+	};
+
+	// Closes our snackbar
+	const handleClose = (event, reason) => {
+		if (reason === "clickaway") {
+			return;
+		}
+
+		setSnackbar({ ...snackbar, open: false });
+	};
+
+	// Error validation
+	const emptyInput = () => {
+		for (let key in inputValues) {
+			if (inputValues[key] === "") {
+				return true;
+			}
+		}
+		return false;
+	};
 
 	// Styles
 	const styles = {
@@ -44,7 +123,7 @@ const Login = () => {
 						color="primary"
 						size="large"
 					>
-						Create Account
+						Register
 					</Button>
 				</Link>
 			</Box>
@@ -55,6 +134,7 @@ const Login = () => {
 						label="Email"
 						name="email"
 						onChange={handleChange}
+						onKeyPress={handleKeyPress}
 						fullWidth
 					/>
 				</Box>
@@ -64,6 +144,7 @@ const Login = () => {
 						name="password"
 						type="password"
 						onChange={handleChange}
+						onKeyPress={handleKeyPress}
 						fullWidth
 					/>
 				</Box>
@@ -82,6 +163,24 @@ const Login = () => {
 		</div>
 	);
 
+	const snackbars = (
+		<div>
+			<Snackbar
+				anchorOrigin={{
+					vertical: "top",
+					horizontal: "center"
+				}}
+				open={snackbar.open}
+				autoHideDuration={6000}
+				onClose={handleClose}
+			>
+				<Alert onClose={handleClose} severity={snackbar.severity}>
+					{snackbar.message}
+				</Alert>
+			</Snackbar>
+		</div>
+	);
+
 	return (
 		<div className="pageContainer">
 			<div className="sideContainer">
@@ -89,6 +188,7 @@ const Login = () => {
 				<p id="sideText">Converse with anyone with any language</p>
 			</div>
 			{formContainer}
+			{snackbars}
 		</div>
 	);
 };

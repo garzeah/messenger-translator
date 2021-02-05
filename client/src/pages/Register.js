@@ -1,12 +1,19 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, TextField, Box } from "@material-ui/core";
+import { Button, TextField, Box, Snackbar } from "@material-ui/core";
+import MuiAlert from "@material-ui/lab/Alert";
 import * as EmailValidator from "email-validator";
 
+import history from "../history";
+import messengerIcon from "../assets/images/message.png";
 import "./RegisterLogin.css";
-import sidebarMessageImage from "../assets/images/message.png";
+
+function Alert(props) {
+	return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const Register = () => {
+	// State management for input and snackbars
 	const [inputValues, setInputValues] = useState({
 		firstName: "",
 		lastName: "",
@@ -14,7 +21,13 @@ const Register = () => {
 		password: "",
 		confirmPassword: ""
 	});
+	const [snackbar, setSnackbar] = useState({
+		open: false,
+		severity: "",
+		message: ""
+	});
 
+	// Destructuring for nicer code
 	const { password, confirmPassword } = inputValues;
 
 	// Stores data in our input state
@@ -25,6 +38,46 @@ const Register = () => {
 
 	// Sends data to our back end server
 	const handleSubmit = async () => {
+		// Checks for missing input
+		if (emptyInput()) {
+			setSnackbar({
+				open: true,
+				severity: "error",
+				message: "Missing input"
+			});
+			return;
+		}
+
+		// Checks for invalid email
+		if (!EmailValidator.validate(inputValues.email)) {
+			setSnackbar({
+				open: true,
+				severity: "error",
+				message: "Invalid email"
+			});
+			return;
+		}
+
+		// Checks if password matches
+		if (password !== confirmPassword) {
+			setSnackbar({
+				open: true,
+				severity: "error",
+				message: "Passwords do not match"
+			});
+			return;
+		}
+
+		// Checks if password is at least 6 characters
+		if (password.length < 6 || confirmPassword.length < 6) {
+			setSnackbar({
+				open: true,
+				severity: "error",
+				message: "Password must be at least 6 characters"
+			});
+			return;
+		}
+
 		// Removing confirmPassword before sending data
 		let copyOfInputValues = inputValues;
 		delete copyOfInputValues.confirmPassword;
@@ -37,30 +90,42 @@ const Register = () => {
 				headers: { "Content-Type": "application/json" }
 			});
 
-			// Configure later for snackbars
+			// Redirect them to messenger page
+			if (res.status === 201) {
+				history.push("/messenger");
+			}
+
 			// In the event we get an error
 			const data = await res.json();
 			if (data.errors) {
-				console.log(data);
+				if (data.errors.email) {
+					setSnackbar({
+						open: true,
+						severity: "error",
+						message: data.errors.email
+					});
+				}
 			}
-
-			// Redirect them to messenger page
-			// history.js stuff
 		} catch (err) {
 			console.log(err);
 		}
 	};
 
-	// Error handling for password (must match and 6 chars minimum) for material-ui
-	let validPassword =
-		password !== confirmPassword ||
-		(password.length > 0 && password.length < 6) ||
-		(confirmPassword.length > 0 && confirmPassword.length < 6);
+	// Pressing enter submits our form
+	const handleKeyPress = (e) => {
+		if (e.which === 13) {
+			handleSubmit();
+		}
+	};
 
-	// Text explaining error
-	let validPasswordHelperText = validPassword
-		? "Passwords must match and be at least 6 characters"
-		: "";
+	// Closes our snackbar
+	const handleClose = (event, reason) => {
+		if (reason === "clickaway") {
+			return;
+		}
+
+		setSnackbar({ ...snackbar, open: false });
+	};
 
 	// Styles
 	const styles = {
@@ -75,6 +140,26 @@ const Register = () => {
 			textTransform: "none",
 			marginBottom: "30px"
 		}
+	};
+
+	// Error handling for password (must match and 6 chars minimum) for material-ui
+	let validPassword =
+		password !== confirmPassword ||
+		(password.length > 0 && password.length < 6) ||
+		(confirmPassword.length > 0 && confirmPassword.length < 6);
+
+	// Text explaining error
+	let validPasswordHelperText = validPassword
+		? "Passwords must match and be at least 6 characters"
+		: "";
+
+	const emptyInput = () => {
+		for (let key in inputValues) {
+			if (inputValues[key] === "") {
+				return true;
+			}
+		}
+		return false;
 	};
 
 	// JSX pertaining to our form
@@ -100,6 +185,7 @@ const Register = () => {
 						label="First Name"
 						name="firstName"
 						onChange={handleChange}
+						onKeyPress={handleKeyPress}
 						fullWidth
 					/>
 				</Box>
@@ -108,6 +194,7 @@ const Register = () => {
 						label="Last Name"
 						name="lastName"
 						onChange={handleChange}
+						onKeyPress={handleKeyPress}
 						fullWidth
 					/>
 				</Box>
@@ -116,6 +203,7 @@ const Register = () => {
 						label="Email"
 						name="email"
 						onChange={handleChange}
+						onKeyPress={handleKeyPress}
 						error={
 							!EmailValidator.validate(inputValues.email) &&
 							inputValues.email !== ""
@@ -135,6 +223,7 @@ const Register = () => {
 						name="password"
 						type="password"
 						onChange={handleChange}
+						onKeyPress={handleKeyPress}
 						fullWidth
 						error={validPassword}
 						helperText={validPasswordHelperText}
@@ -146,6 +235,7 @@ const Register = () => {
 						name="confirmPassword"
 						type="password"
 						onChange={handleChange}
+						onKeyPress={handleKeyPress}
 						fullWidth
 						error={validPassword}
 					/>
@@ -165,19 +255,38 @@ const Register = () => {
 		</div>
 	);
 
+	const snackbars = (
+		<div>
+			<Snackbar
+				anchorOrigin={{
+					vertical: "top",
+					horizontal: "center"
+				}}
+				open={snackbar.open}
+				autoHideDuration={6000}
+				onClose={handleClose}
+			>
+				<Alert onClose={handleClose} severity={snackbar.severity}>
+					{snackbar.message}
+				</Alert>
+			</Snackbar>
+		</div>
+	);
+
 	return (
 		<div className="pageContainer">
 			<div className="sideContainer" style={{ marginBottom: "30px" }}>
 				<div>
 					<img
 						id="messengerIcon"
-						src={sidebarMessageImage}
+						src={messengerIcon}
 						alt="Message Symbol"
 					></img>
 				</div>
 				<p id="sideText">Converse with anyone with any language</p>
 			</div>
 			{formContainer}
+			{snackbars}
 		</div>
 	);
 };
