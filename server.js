@@ -34,6 +34,11 @@ if (process.env.NODE_ENV === "production") {
 	// Express will serve up production assets like main.js or main.css
 	app.use(express.static("client/build"));
 
+	// required to serve SPA on heroku production without routing problems; it will skip only 'api' calls
+	app.get(/^((?!(api)).)*$/, (req, res) => {
+		res.sendFile(path.join(__dirname, "client/build", "index.html"));
+	});
+
 	// Express will serve up the index.html file if it doesn't recognize the route
 	const path = require("path");
 	app.get("*", (req, res) => {
