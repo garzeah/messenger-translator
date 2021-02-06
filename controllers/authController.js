@@ -51,14 +51,12 @@ module.exports.register_post = async (req, res) => {
 module.exports.login_post = async (req, res) => {
 	try {
 		const user = await User.login(req.body.email, req.body.password);
-		console.log(user);
 		const token = await user.generateAuthToken();
 		res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
 		res.status(200).json({ user: user._id });
 	} catch (err) {
-		// const errors = handleErrors(err);
-		// res.status(400).send({ errors });
-		res.status(500).send(err);
+		const errors = handleErrors(err);
+		res.status(400).send({ errors });
 	}
 };
 
