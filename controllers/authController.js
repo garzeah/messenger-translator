@@ -55,9 +55,9 @@ module.exports.login_post = async (req, res) => {
 		res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
 		res.status(200).json({ user: user._id });
 	} catch (err) {
-		const errors = handleErrors(err);
-		if (errors) res.status(400).json({ errors });
-		else res.send(err);
+		res.send(err);
+		// const errors = handleErrors(err);
+		// res.status(400).send({ errors });
 	}
 };
 
