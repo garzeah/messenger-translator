@@ -19,24 +19,24 @@ const verifyToken = require("../middlewares/verifyToken");
 const userController = require("../controllers/userController");
 
 // Retrieve all profiles
-router.get("/api/users", verifyToken, userController.fetch_all_profiles_get);
+router.get("/api/users", verifyToken, userController.fetchAllProfilesGet);
 
 // Retrieve your own profile
-router.get("/api/users/me", verifyToken, userController.fetch_my_profile_get);
+router.get("/api/users/me", verifyToken, userController.fetchMyProfileGet);
 
 // Upload Avatar
 router.post(
 	"/api/users/me/avatar",
 	verifyToken,
 	upload.single("avatar"),
-	userController.upload_avatar_post
+	userController.uploadAvatarPost
 );
 
 // Fetch Avatar
 router.get(
 	"/api/users/:id/avatar",
 	verifyToken,
-	userController.fetch_my_avatar_get
+	userController.fetchMyAvatarGet
 );
 
 module.exports = router;

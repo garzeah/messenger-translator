@@ -32,14 +32,13 @@ const handleErrors = (err) => {
 	return errors;
 };
 
-module.exports.register_post = async (req, res) => {
+const registerPost = async (req, res) => {
 	const user = new User(req.body);
 
 	// Saving user and giving them a JWT
 	try {
 		await user.save();
 		const token = await user.generateAuthToken();
-		// const token = createToken(user._id);
 		res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
 		res.status(201).send({ user: user._id });
 	} catch (err) {
@@ -48,7 +47,7 @@ module.exports.register_post = async (req, res) => {
 	}
 };
 
-module.exports.login_post = async (req, res) => {
+const loginPost = async (req, res) => {
 	try {
 		const user = await User.login(req.body.email, req.body.password);
 		const token = await user.generateAuthToken();
@@ -60,7 +59,13 @@ module.exports.login_post = async (req, res) => {
 	}
 };
 
-module.exports.logout_get = (req, res) => {
+const logoutGet = (req, res) => {
 	res.cookie("jwt", "", { maxAge: 1 });
 	res.status(200).json({ success: true, redirectURL: "/login" });
+};
+
+module.exports = {
+	registerPost,
+	loginPost,
+	logoutGet
 };
