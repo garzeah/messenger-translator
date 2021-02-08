@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Button, TextField, Box, Snackbar } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 
-import history from "../history";
 import messengerIcon from "../assets/images/message.png";
 import "./RegisterLogin.css";
 
@@ -22,6 +21,9 @@ const Login = () => {
 		severity: "",
 		message: ""
 	});
+
+	// Will be used to redirect user
+	const history = useHistory();
 
 	// Stores data in out input state
 	const handleChange = (e) => {
@@ -96,21 +98,6 @@ const Login = () => {
 		return false;
 	};
 
-	// Styles
-	const styles = {
-		createAccountButton: {
-			padding: "15px 60px",
-			color: "#3A8DFF",
-			textTransform: "none"
-		},
-		loginButton: {
-			padding: "15px 60px",
-			background: "#3A8DFF",
-			textTransform: "none",
-			marginBottom: "30px"
-		}
-	};
-
 	// JSX pertaining to our form
 	const formContainer = (
 		<div className="formContainer">
@@ -118,8 +105,7 @@ const Login = () => {
 				<p style={{ marginRight: "15px" }}>Don't have an account?</p>
 				<Link to="/">
 					<Button
-						className="boxShadow"
-						style={styles.createAccountButton}
+						className="boxShadow registerLoginButton"
 						color="primary"
 						size="large"
 					>
@@ -150,8 +136,9 @@ const Login = () => {
 				</Box>
 				<div className="authButton">
 					<Button
+						className="messengerButton"
 						onClick={handleSubmit}
-						style={styles.loginButton}
+						style={{ marginBottom: "30px" }}
 						size="large"
 						variant="contained"
 						color="primary"

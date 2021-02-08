@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Button, TextField, Box, Snackbar } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import * as EmailValidator from "email-validator";
 
-import history from "../history";
 import messengerIcon from "../assets/images/message.png";
 import "./RegisterLogin.css";
 
@@ -26,6 +25,9 @@ const Register = () => {
 		severity: "",
 		message: ""
 	});
+
+	// Will be used to redirect user
+	const history = useHistory();
 
 	// Destructuring for nicer code
 	const { password, confirmPassword } = inputValues;
@@ -127,21 +129,6 @@ const Register = () => {
 		setSnackbar({ ...snackbar, open: false });
 	};
 
-	// Styles
-	const styles = {
-		loginButton: {
-			padding: "15px 60px",
-			color: "#3A8DFF",
-			textTransform: "none"
-		},
-		createButton: {
-			padding: "15px 60px",
-			background: "#3A8DFF",
-			textTransform: "none",
-			marginBottom: "30px"
-		}
-	};
-
 	// Error handling for password (must match and 6 chars minimum) for material-ui
 	let validPassword =
 		password !== confirmPassword ||
@@ -169,8 +156,7 @@ const Register = () => {
 				<p style={{ marginRight: "15px" }}>Already have an account?</p>
 				<Link to="/login">
 					<Button
-						className="boxShadow"
-						style={styles.loginButton}
+						className="boxShadow registerLoginButton"
 						color="primary"
 						size="large"
 					>
@@ -242,13 +228,14 @@ const Register = () => {
 				</Box>
 				<div className="authButton">
 					<Button
+						className="messengerButton"
+						style={{ marginBottom: "30px" }}
 						onClick={handleSubmit}
-						style={styles.createButton}
 						size="large"
 						variant="contained"
 						color="primary"
 					>
-						Create
+						Register
 					</Button>
 				</div>
 			</Box>

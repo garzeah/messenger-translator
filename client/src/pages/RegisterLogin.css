@@ -29,6 +29,18 @@ h2 {
 	margin-bottom: 5px;
 }
 
+.registerLoginButton {
+	padding: 15px 60px !important;
+	color: #3a8dff !important;
+	text-transform: none !important;
+}
+
+.messengerButton {
+	padding: 15px 60px !important;
+	background: #3a8dff !important;
+	text-transform: none !important;
+}
+
 /* Mobile View */
 @media (max-width: 767px) {
 	.pageContainer {
