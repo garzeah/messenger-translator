@@ -1,6 +1,19 @@
-html,
-body {
-	overflow: hidden;
-	height: 100%;
-	font-family: "Open Sans";
+/* Mobile View */
+@media (max-width: 767px) {
+	html,
+	body {
+		overflow: scroll;
+		height: 100%;
+		font-family: "Open Sans";
+	}
+}
+
+/* Tablet/Desktop view */
+@media (min-width: 768px) {
+	html,
+	body {
+		overflow: hidden;
+		height: 100%;
+		font-family: "Open Sans";
+	}
 }

@@ -1,13 +1,18 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useMediaQuery } from "react-responsive";
-import { Button, TextField, Box } from "@material-ui/core";
+import { Link, useHistory } from "react-router-dom";
+import { Button, TextField, Box, Snackbar } from "@material-ui/core";
+import MuiAlert from "@material-ui/lab/Alert";
 import * as EmailValidator from "email-validator";
 
+import messengerIcon from "../assets/images/message.png";
 import "./RegisterLogin.css";
-import backgroundImage from "../assets/images/bg-img.png";
+
+function Alert(props) {
+	return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const Register = () => {
+	// State management for input and snackbars
 	const [inputValues, setInputValues] = useState({
 		firstName: "",
 		lastName: "",
@@ -15,7 +20,16 @@ const Register = () => {
 		password: "",
 		confirmPassword: ""
 	});
+	const [snackbar, setSnackbar] = useState({
+		open: false,
+		severity: "",
+		message: ""
+	});
 
+	// Will be used to redirect user
+	const history = useHistory();
+
+	// Destructuring for nicer code
 	const { password, confirmPassword } = inputValues;
 
 	// Stores data in our input state
@@ -26,6 +40,46 @@ const Register = () => {
 
 	// Sends data to our back end server
 	const handleSubmit = async () => {
+		// Checks for missing input
+		if (emptyInput()) {
+			setSnackbar({
+				open: true,
+				severity: "error",
+				message: "Missing input"
+			});
+			return;
+		}
+
+		// Checks for invalid email
+		if (!EmailValidator.validate(inputValues.email)) {
+			setSnackbar({
+				open: true,
+				severity: "error",
+				message: "Invalid email"
+			});
+			return;
+		}
+
+		// Checks if password matches
+		if (password !== confirmPassword) {
+			setSnackbar({
+				open: true,
+				severity: "error",
+				message: "Passwords do not match"
+			});
+			return;
+		}
+
+		// Checks if password is at least 6 characters
+		if (password.length < 6 || confirmPassword.length < 6) {
+			setSnackbar({
+				open: true,
+				severity: "error",
+				message: "Password must be at least 6 characters"
+			});
+			return;
+		}
+
 		// Removing confirmPassword before sending data
 		let copyOfInputValues = inputValues;
 		delete copyOfInputValues.confirmPassword;
@@ -38,26 +92,42 @@ const Register = () => {
 				headers: { "Content-Type": "application/json" }
 			});
 
-			// Configure later for snackbars
+			// Redirect them to messenger page
+			if (res.status === 201) {
+				history.push("/messenger");
+			}
+
 			// In the event we get an error
 			const data = await res.json();
 			if (data.errors) {
-				console.log(data);
+				if (data.errors.email) {
+					setSnackbar({
+						open: true,
+						severity: "error",
+						message: data.errors.email
+					});
+				}
 			}
-
-			// Redirect them to messenger page
-			// history.js stuff
 		} catch (err) {
 			console.log(err);
 		}
 	};
-	// Responsive breakpoints
-	const isMobile = useMediaQuery({
-		query: "(max-device-width: 767px)"
-	});
-	const isTabletDesktop = useMediaQuery({
-		query: "(min-device-width: 768px)"
-	});
+
+	// Pressing enter submits our form
+	const handleKeyPress = (e) => {
+		if (e.which === 13) {
+			handleSubmit();
+		}
+	};
+
+	// Closes our snackbar
+	const handleClose = (event, reason) => {
+		if (reason === "clickaway") {
+			return;
+		}
+
+		setSnackbar({ ...snackbar, open: false });
+	};
 
 	// Error handling for password (must match and 6 chars minimum) for material-ui
 	let validPassword =
@@ -70,6 +140,15 @@ const Register = () => {
 		? "Passwords must match and be at least 6 characters"
 		: "";
 
+	const emptyInput = () => {
+		for (let key in inputValues) {
+			if (inputValues[key] === "") {
+				return true;
+			}
+		}
+		return false;
+	};
+
 	// JSX pertaining to our form
 	const formContainer = (
 		<div className="formContainer">
@@ -77,26 +156,22 @@ const Register = () => {
 				<p style={{ marginRight: "15px" }}>Already have an account?</p>
 				<Link to="/login">
 					<Button
-						style={{
-							padding: "15px 60px",
-							color: "#3A8DFF",
-							textTransform: "none"
-						}}
+						className="boxShadow registerLoginButton"
 						color="primary"
 						size="large"
-						className="boxShadow"
 					>
 						Login
 					</Button>
 				</Link>
 			</Box>
-			<Box mt={10} mx={6} px={10}>
+			<Box mt={7} mx={6}>
 				<h2>Create an account</h2>
 				<Box mt={2}>
 					<TextField
 						label="First Name"
 						name="firstName"
 						onChange={handleChange}
+						onKeyPress={handleKeyPress}
 						fullWidth
 					/>
 				</Box>
@@ -105,6 +180,7 @@ const Register = () => {
 						label="Last Name"
 						name="lastName"
 						onChange={handleChange}
+						onKeyPress={handleKeyPress}
 						fullWidth
 					/>
 				</Box>
@@ -113,6 +189,7 @@ const Register = () => {
 						label="Email"
 						name="email"
 						onChange={handleChange}
+						onKeyPress={handleKeyPress}
 						error={
 							!EmailValidator.validate(inputValues.email) &&
 							inputValues.email !== ""
@@ -132,6 +209,7 @@ const Register = () => {
 						name="password"
 						type="password"
 						onChange={handleChange}
+						onKeyPress={handleKeyPress}
 						fullWidth
 						error={validPassword}
 						helperText={validPasswordHelperText}
@@ -143,45 +221,59 @@ const Register = () => {
 						name="confirmPassword"
 						type="password"
 						onChange={handleChange}
+						onKeyPress={handleKeyPress}
 						fullWidth
 						error={validPassword}
 					/>
 				</Box>
 				<div className="authButton">
 					<Button
+						className="messengerButton"
+						style={{ marginBottom: "30px" }}
 						onClick={handleSubmit}
-						style={{
-							padding: "15px 60px",
-							background: "#3A8DFF",
-							textTransform: "none"
-						}}
 						size="large"
 						variant="contained"
 						color="primary"
 					>
-						Create
+						Register
 					</Button>
 				</div>
 			</Box>
 		</div>
 	);
 
-	// JSX for each respective view
-	const registerMobile = <div className="pageContainer">{formContainer}</div>;
-	const registerTabletDesktop = (
-		<div className="pageContainer">
-			<div className="sideContainer">
-				<img src={backgroundImage} alt="background"></img>
-				<p id="sideText">Converse with anyone with any language</p>
-			</div>
-			{formContainer}
+	const snackbars = (
+		<div>
+			<Snackbar
+				anchorOrigin={{
+					vertical: "top",
+					horizontal: "center"
+				}}
+				open={snackbar.open}
+				autoHideDuration={6000}
+				onClose={handleClose}
+			>
+				<Alert onClose={handleClose} severity={snackbar.severity}>
+					{snackbar.message}
+				</Alert>
+			</Snackbar>
 		</div>
 	);
 
 	return (
-		<div>
-			{isMobile && registerMobile}
-			{isTabletDesktop && registerTabletDesktop}
+		<div className="pageContainer">
+			<div className="sideContainer" style={{ marginBottom: "30px" }}>
+				<div>
+					<img
+						id="messengerIcon"
+						src={messengerIcon}
+						alt="Message Symbol"
+					></img>
+				</div>
+				<p id="sideText">Converse with anyone with any language</p>
+			</div>
+			{formContainer}
+			{snackbars}
 		</div>
 	);
 };
