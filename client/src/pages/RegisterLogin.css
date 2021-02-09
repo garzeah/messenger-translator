@@ -2,7 +2,8 @@
 
 /* General Styles */
 h2 {
-	font-family: "Open Sans Semi-bold";
+	font-family: "Open Sans";
+	font-weight: 600;
 	font-size: 30px;
 }
 
@@ -30,17 +31,17 @@ h2 {
 		display: flex;
 	}
 
-	.advertisementContainer {
+	.sideContainer {
 		position: relative;
 		background-image: linear-gradient(#3a8dff, #86b9ff);
 	}
 
-	.advertisementContainer img {
-		width: 400px;
-		opacity: 15%;
+	.sideContainer img {
+		width: 550px;
+		opacity: 15% !important;
 	}
 
-	#advertisementText {
+	#sideText {
 		position: absolute;
 		font-size: 30px;
 		text-align: center;

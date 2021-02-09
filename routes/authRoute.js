@@ -1,34 +1,11 @@
 const express = require("express");
 const router = new express.Router();
 
-const User = require("../models/User");
+const authController = require("../controllers/authController");
 
-// User register
-router.post("/api/register", async (req, res) => {
-	const user = new User(req.body);
-
-	// Saving user and giving them a JWT
-	try {
-		await user.save();
-		const token = await user.generateAuthToken();
-		res.status(201).send({ user, token });
-	} catch (err) {
-		res.sendStatus(400);
-	}
-});
-
-// User login
-router.post("/api/login", async (req, res) => {
-	try {
-		const user = await User.findByCredentials(
-			req.body.email,
-			req.body.password
-		);
-		const token = await user.generateAuthToken();
-		res.status(200).send({ user, token });
-	} catch (err) {
-		res.sendStatus(400);
-	}
-});
+// User register and login
+router.post("/api/register", authController.registerPost);
+router.post("/api/login", authController.loginPost);
+router.get("/api/logout", authController.logoutGet);
 
 module.exports = router;

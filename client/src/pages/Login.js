@@ -53,7 +53,7 @@ const Login = () => {
 					</Button>
 				</Link>
 			</Box>
-			<Box mt={10} mx={6}>
+			<Box mt={10} mx={6} px={10}>
 				<h2>Welcome back!</h2>
 				<Box mt={2}>
 					<TextField
@@ -95,9 +95,9 @@ const Login = () => {
 	const registerMobile = <div className="pageContainer">{formContainer}</div>;
 	const registerTabletDesktop = (
 		<div className="pageContainer">
-			<div className="advertisementContainer">
+			<div className="sideContainer">
 				<img src={backgroundImage} alt="background"></img>
-				<p id="advertisementText">Converse with anyone with any language</p>
+				<p id="sideText">Converse with anyone with any language</p>
 			</div>
 			{formContainer}
 		</div>
