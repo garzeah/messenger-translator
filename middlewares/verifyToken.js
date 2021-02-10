@@ -6,11 +6,11 @@ const verifyToken = (req, res, next) => {
 
 	// Check if JWT exists & is verified
 	if (token) {
-		jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decodedToken) => {
+		jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
 			if (err) {
 				res.status(200).json({ success: true, redirectURL: "/login" });
 			} else {
-				console.log(decodedToken);
+				req.user = user;
 				next();
 			}
 		});
