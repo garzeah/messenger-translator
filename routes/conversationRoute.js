@@ -13,15 +13,19 @@ router.post(
 
 // Get all conversations for a user
 router.get(
-	"/conversations/",
+	"/conversations/me",
 	verifyToken,
-	convoController.fetchAllConversationsGet
+	convoController.fetchAllMyConversationsGet
 );
 
-// Get a specific conversation
-router.get("/conversations/:id", convoController.fetchConversationGet);
+// Get a specific conversation and its messages
+router.get(
+	"/conversations/:id",
+	verifyToken,
+	convoController.fetchConversationGet
+);
 
 // Send message
-router.post("/conversations/:id", convoController.sendMessagePost);
+router.post("/conversations/:id", verifyToken, convoController.sendMessagePost);
 
 module.exports = router;
