@@ -47,11 +47,51 @@ const newConversationPost = async (req, res) => {
 
 // Get all conversations for a user
 const fetchAllMyConversationsGet = async (req, res) => {
+	// List to store everyone's name
+	let conversationList = [];
+
 	// Finds all conversations the user is associated with
 	const conversations = await Conversation.find({
 		"participants.participant": req.user._id
 	});
-	res.send(conversations);
+
+	// Find every participant that does not equal user's _id
+	// and store in conversationList
+	for (let i = 0; i < conversations.length; i++) {
+		// Making sure we do not store our user ID when fetching conversations
+		// Fix this later, it's really inefficient but its fine since we
+		// have 2 users max, although if we were to have more than 2 participants
+		// it would be better to optimize this
+		conversations[i].participants[0].participant == req.user._id
+			? null
+			: conversationList.push({
+					conversationID: conversations[i]._id,
+					userID: conversations[i].participants[0].participant
+			  });
+
+		conversations[i].participants[1].participant == req.user._id
+			? null
+			: conversationList.push({
+					conversationID: conversations[i]._id,
+					userID: conversations[i].participants[1].participant
+			  });
+	}
+
+	// Going to append the user's data to the conversationList
+	for (let i = 0; i < conversationList.length; i++) {
+		let userData = await User.findById({ _id: conversationList[i].userID });
+		// If user data exists, update conversationList information
+		if (userData) {
+			conversationList[i] = {
+				...conversationList[i],
+				firstName: userData.firstName,
+				lastName: userData.lastName,
+				email: userData.email,
+				avatar: userData.avatar
+			};
+		}
+	}
+	res.send(conversationList);
 };
 
 // Get a specific conversation and its messages

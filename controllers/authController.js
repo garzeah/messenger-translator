@@ -61,11 +61,22 @@ const loginPost = async (req, res) => {
 
 const logoutGet = (req, res) => {
 	res.cookie("jwt", "", { maxAge: 1 });
-	res.status(200).json({ success: true, redirectURL: "/login" });
+	res.status(200).send();
+};
+
+const checkUserGet = (req, res) => {
+	// If user is logged in...
+	if (req.user) {
+		res.status(200).send();
+		// Otherwise, user is not found and they have to register or login
+	} else {
+		res.status(404).send();
+	}
 };
 
 module.exports = {
 	registerPost,
 	loginPost,
-	logoutGet
+	logoutGet,
+	checkUserGet
 };

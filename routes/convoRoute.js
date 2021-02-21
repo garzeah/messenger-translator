@@ -6,26 +6,30 @@ const convoController = require("../controllers/convoController");
 
 // Create a conversation
 router.post(
-	"/conversations/new/",
+	"/api/conversations/new",
 	verifyToken,
 	convoController.newConversationPost
 );
 
 // Get all conversations for a user
 router.get(
-	"/conversations/me",
+	"/api/conversations/me",
 	verifyToken,
 	convoController.fetchAllMyConversationsGet
 );
 
 // Get a specific conversation and its messages
 router.get(
-	"/conversations/:id",
+	"/api/conversations/:id",
 	verifyToken,
 	convoController.fetchConversationGet
 );
 
 // Send message
-router.post("/conversations/:id", verifyToken, convoController.sendMessagePost);
+router.post(
+	"/api/conversations/:id",
+	verifyToken,
+	convoController.sendMessagePost
+);
 
 module.exports = router;

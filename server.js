@@ -7,7 +7,7 @@ require("dotenv").config();
 // Routes
 const authRouter = require("./routes/authRoute");
 const userRouter = require("./routes/userRoute");
-const conversationRouter = require("./routes/conversationRoute");
+const convoRouter = require("./routes/convoRoute");
 
 // Connecting to remote Mongo database
 mongoose.connect(keys.mongoURI, {
@@ -27,7 +27,7 @@ app.use(cookieParser());
 // Initializing Routes
 app.use(authRouter);
 app.use(userRouter);
-app.use(conversationRouter);
+app.use(convoRouter);
 
 // Makes sure Express behaves correctly in production environment
 if (process.env.NODE_ENV === "production") {

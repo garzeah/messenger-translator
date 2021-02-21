@@ -6,30 +6,17 @@ const verifyToken = (req, res, next) => {
 
 	// Check if JWT exists & is verified
 	if (token) {
-		jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+		jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decodedToken) => {
 			if (err) {
-				res.status(200).json({ success: true, redirectURL: "/login" });
+				res.status(404).send();
 			} else {
-				req.user = user;
+				req.user = decodedToken;
 				next();
 			}
 		});
 	} else {
-		res.status(200).json({ success: true, redirectURL: "/login" });
+		res.status(404).send();
 	}
-
-	// Old way of verifying, in case I need in the future
-	// const authHeader = req.headers["authorization"];
-	// // If authHeader exists then we split
-	// const token = authHeader && authHeader.split(" ")[1];
-	// if (token === null) return res.sendStatus(401);
-
-	// jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-	// 	if (err) return res.sendStatus(403);
-
-	// 	req.user = user;
-	// 	next();
-	// });
 };
 
 module.exports = verifyToken;

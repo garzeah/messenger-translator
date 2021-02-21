@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { Button, TextField, Box, Snackbar } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
@@ -24,6 +24,20 @@ const Login = () => {
 
 	// Will be used to redirect user
 	const history = useHistory();
+
+	// Retrieves user information
+	useEffect(() => {
+		const loginCheck = async () => {
+			// Checking to see if user is logged in
+			const isLoggedIn = await fetch("/api/checkUser");
+
+			// If user is logged in...then redirect to messenger
+			if (isLoggedIn.status === 200) {
+				history.push("/messenger");
+			}
+		};
+		loginCheck();
+	}, [history]);
 
 	// Stores data in out input state
 	const handleChange = (e) => {
