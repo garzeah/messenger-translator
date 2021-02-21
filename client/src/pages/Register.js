@@ -27,7 +27,7 @@ const Register = () => {
 	// JSX pertaining to our form
 	const formContainer = (
 		<div className="formContainer">
-			<Box className="header" mt={3} mx={3}>
+			<Box className="header" mt={2} mx={3}>
 				<p style={{ marginRight: "15px" }}>Already have an account?</p>
 				<Link to="/login">
 					<Button
@@ -39,7 +39,7 @@ const Register = () => {
 					</Button>
 				</Link>
 			</Box>
-			<Box mt={7} mx={6}>
+			<Box mt={5} mx={6}>
 				<h2>Create an account</h2>
 				<ProfileForm type="Register" route="api/register" />
 			</Box>

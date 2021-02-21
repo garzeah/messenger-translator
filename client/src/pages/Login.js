@@ -115,7 +115,7 @@ const Login = () => {
 	// JSX pertaining to our form
 	const formContainer = (
 		<div className="formContainer">
-			<Box className="header" mt={3} mx={3}>
+			<Box className="header" mt={2} mx={3}>
 				<p style={{ marginRight: "15px" }}>Don't have an account?</p>
 				<Link to="/">
 					<Button
@@ -127,7 +127,7 @@ const Login = () => {
 					</Button>
 				</Link>
 			</Box>
-			<Box mt={7} mx={6}>
+			<Box mt={5} mx={6}>
 				<h2>Welcome back!</h2>
 				<Box mt={2}>
 					<TextField
