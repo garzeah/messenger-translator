@@ -24,7 +24,8 @@ const fetchMyProfileGet = async (req, res) => {
 // Update my profile
 const updateMyProfile = async (req, res) => {
 	try {
-		await User.findByIdAndUpdate({ _id: req.user._id }, req.body);
+		const update = await User.findById({ _id: req.user._id }, req.body);
+		update.save();
 		res.status(201).send();
 	} catch (err) {
 		res.status(500).send(err);
