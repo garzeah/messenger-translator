@@ -42,7 +42,6 @@ const EditProfileModal = () => {
 	const history = useHistory();
 
 	const handleLogout = async () => {
-		console.log("hey");
 		try {
 			// Our data to send to the server
 			const res = await fetch("/api/logout");

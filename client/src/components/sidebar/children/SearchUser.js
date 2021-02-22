@@ -29,7 +29,7 @@ const styles = {
 
 const StyledInput = withStyles(styles)(OutlinedInput);
 
-const SearchUser = ({ setSearchInput }) => {
+const SearchUser = ({ searchInput, setSearchInput }) => {
 	const handleChange = (e) => {
 		setSearchInput(e.target.value);
 	};
@@ -39,6 +39,7 @@ const SearchUser = ({ setSearchInput }) => {
 			<FormControl className="searchUser" fullWidth>
 				<StyledInput
 					onChange={(e) => handleChange(e)}
+					value={searchInput}
 					placeholder="Search"
 					startAdornment={
 						<InputAdornment position="start">

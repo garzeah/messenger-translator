@@ -29,12 +29,12 @@ const PreviewItem = ({ type, id, avatar, name, email, setSearchInput }) => {
 				body: JSON.stringify({ email }),
 				headers: { "Content-Type": "application/json" }
 			});
+
+			// Clear user input
+			setSearchInput("");
 		} catch (err) {
 			console.log(err);
 		}
-
-		// Clear user input
-		setSearchInput("");
 	};
 
 	// Displaying Avatar JSX

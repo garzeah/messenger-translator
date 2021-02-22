@@ -10,20 +10,49 @@ const newConversationPost = async (req, res) => {
 
 		// If the user is trying to start a conversation with themselves
 		if (req.user._id == recipient._id) {
-			return res.json({
+			return res.status(403).json({
 				error: "You cannot start a conversation with yourself!"
 			});
 		}
 
 		// Checking to see if conversation already exists
 		const conversation = await Conversation.findOne({
-			// Saving Sender and Recipient's ID
-			"participants.participant": req.user._id,
-			"participants.participant": recipient._id
+			// Searching by Sender and Recipient's ID
+			$and: [
+				{ "participants.participant": req.user._id },
+				{ "participants.participant": recipient._id }
+			]
 		});
 
-		// If a conversation already exists, return that conversation
-		if (conversation) return res.send(conversation._id);
+		// If a conversation already exists push it to the bottom
+		// of our collection and return it
+		if (conversation) {
+			// Delete that specific conversation from our collection
+			await Conversation.deleteOne({
+				// Searching by Sender and Recipient's ID
+				$and: [
+					{ "participants.participant": req.user._id },
+					{ "participants.participant": recipient._id }
+				]
+			});
+
+			// Initializing the conversation that exists
+			// so we can save it to our DB
+			updatedConversation = new Conversation({
+				participants: [
+					{
+						participant: conversation.participants[0].participant
+					},
+					{
+						participant: conversation.participants[1].participant
+					}
+				]
+			});
+
+			// Saving to our DB
+			await updatedConversation.save();
+			return res.status(200).send(conversation._id);
+		}
 
 		// Otherwise, lets create a new conversation and save it
 		const newConversation = new Conversation({
@@ -39,7 +68,7 @@ const newConversationPost = async (req, res) => {
 
 		// Saving it to our database and sending the new convo
 		await newConversation.save();
-		res.send(newConversation._id);
+		res.status(200).send(newConversation._id);
 	} catch (err) {
 		res.status(500).send(err);
 	}

@@ -11,7 +11,7 @@ const Sidebar = () => {
 		<div className="sidebar">
 			<SidebarHeader />
 			<h2 id="chatsText">Chats</h2>
-			<SearchUser setSearchInput={setSearchInput} />
+			<SearchUser searchInput={searchInput} setSearchInput={setSearchInput} />
 			{
 				// Rendering diff components based on user input
 				searchInput ? (
