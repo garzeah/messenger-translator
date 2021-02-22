@@ -31,6 +31,7 @@ const updateMyProfile = async (req, res) => {
 			req.body.password = await bcrypt.hash(req.body.password, 8);
 
 		await User.findOneAndUpdate({ _id: req.user._id }, req.body);
+
 		res.status(201).send();
 	} catch (err) {
 		res.status(500).send(err);
