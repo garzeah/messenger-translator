@@ -24,33 +24,8 @@ const newConversationPost = async (req, res) => {
 			]
 		});
 
-		// If a conversation already exists push it to the bottom
-		// of our collection and return it
+		// If a conversation already exists return it
 		if (conversation) {
-			// Delete that specific conversation from our collection
-			await Conversation.deleteOne({
-				// Searching by Sender and Recipient's ID
-				$and: [
-					{ "participants.participant": req.user._id },
-					{ "participants.participant": recipient._id }
-				]
-			});
-
-			// Initializing the conversation that exists
-			// so we can save it to our DB
-			updatedConversation = new Conversation({
-				participants: [
-					{
-						participant: conversation.participants[0].participant
-					},
-					{
-						participant: conversation.participants[1].participant
-					}
-				]
-			});
-
-			// Saving to our DB
-			await updatedConversation.save();
 			return res.status(200).send(conversation._id);
 		}
 
@@ -163,3 +138,31 @@ module.exports = {
 	fetchConversationGet,
 	sendMessagePost
 };
+
+// This function will later be used to push a specific conversation
+// to the top of our SidebarList when a user sends a message
+
+// // Delete that specific conversation from our collection
+// await Conversation.deleteOne({
+// 	// Searching by Sender and Recipient's ID
+// 	$and: [
+// 		{ "participants.participant": req.user._id },
+// 		{ "participants.participant": recipient._id }
+// 	]
+// });
+
+// // Initializing the conversation that exists
+// // so we can save it to our DB
+// updatedConversation = new Conversation({
+// 	participants: [
+// 		{
+// 			participant: conversation.participants[0].participant
+// 		},
+// 		{
+// 			participant: conversation.participants[1].participant
+// 		}
+// 	]
+// });
+
+// // Saving to our DB
+// await updatedConversation.save();
