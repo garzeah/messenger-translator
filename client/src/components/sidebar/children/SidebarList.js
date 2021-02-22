@@ -19,24 +19,23 @@ const SidebarList = ({ type, route, searchInput, setSearchInput }) => {
 	}, [type, route]);
 
 	// List of conversations a user has
-	let convoListContent = Object.keys(convoList)
-		// This will give us the most recent conversation
-		.slice(0)
-		.reverse()
-		.map((key) => {
-			let hasAvatar;
-			if (convoList[key].avatar) hasAvatar = true;
-			else hasAvatar = false;
-			return (
-				<PreviewConvo
-					type="convo"
-					key={`${convoList[key].conversationID}`}
-					id={`${convoList[key].userID}`}
-					avatar={hasAvatar}
-					name={`${convoList[key].firstName} ${convoList[key].lastName}`}
-				/>
-			);
-		});
+	let convoListContent = Object.keys(convoList).map((_, idx, convos) => {
+		// Wrote it in this manner so we can reverse the array
+		// while returning each appropriate convo in O(n)
+		let key = convos[convoList.length - 1 - idx];
+		let hasAvatar;
+		if (convoList[key].avatar) hasAvatar = true;
+		else hasAvatar = false;
+		return (
+			<PreviewConvo
+				type="convo"
+				key={`${convoList[key].conversationID}`}
+				id={`${convoList[key].userID}`}
+				avatar={hasAvatar}
+				name={`${convoList[key].firstName} ${convoList[key].lastName}`}
+			/>
+		);
+	});
 
 	// List of possible users a user can add
 	let filteredUserList = Object.values(userList).reduce((filtered, user) => {
