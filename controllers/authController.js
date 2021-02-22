@@ -68,8 +68,8 @@ const checkUserGet = (req, res) => {
 	// If user is logged in...
 	if (req.user) {
 		res.status(200).send();
-		// Otherwise, user is not found and they have to register or login
 	} else {
+		// Otherwise, user is not found and they have to register or login
 		res.status(404).send();
 	}
 };

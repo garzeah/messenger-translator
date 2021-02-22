@@ -16,7 +16,7 @@ const Messenger = () => {
 			const isLoggedIn = await fetch("/api/checkUser");
 
 			// If user is logged in...then redirect to messenger
-			if (isLoggedIn.status === 404) {
+			if (isLoggedIn.status !== 200) {
 				history.push("/login");
 			}
 		};
