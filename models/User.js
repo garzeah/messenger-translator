@@ -70,8 +70,10 @@ userSchema.statics.login = async (email, password) => {
 userSchema.pre("save", async function (next, err) {
 	const user = this;
 
-	if (user.isModified("password"))
-		user.password = await bcrypt.hash(user.password, 8);
+	if ("save") {
+		if (user.isModified("password"))
+			user.password = await bcrypt.hash(user.password, 8);
+	}
 
 	next();
 });
