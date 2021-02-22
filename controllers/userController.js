@@ -1,4 +1,6 @@
 const sharp = require("sharp");
+const bcrypt = require("bcryptjs");
+
 const User = require("../models/User");
 
 // Fetching all profiles and your profile
@@ -24,6 +26,10 @@ const fetchMyProfileGet = async (req, res) => {
 // Update my profile
 const updateMyProfile = async (req, res) => {
 	try {
+		// Hashing our updated password
+		if (req.body.password)
+			req.body.password = await bcrypt.hash(req.body.password, 8);
+
 		await User.findOneAndUpdate({ _id: req.user._id }, req.body);
 		res.status(201).send();
 	} catch (err) {
