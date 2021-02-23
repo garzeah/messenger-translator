@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-const EditProfileModal = () => {
+const Settings = () => {
 	const classes = useStyles();
 	// getModalStyle is not a pure function, we roll the style only on the first render
 	const [modalStyle] = useState(getModalStyle);
@@ -61,7 +61,7 @@ const EditProfileModal = () => {
 				<h2>Edit Profile</h2>
 				<CancelIcon className="modalExit" onClick={() => setOpen(false)} />
 			</div>
-			<ProfileForm type="Update" route="api/users/me" />
+			<ProfileForm type="Update" route="/api/users/me" />
 		</div>
 	);
 
@@ -81,4 +81,4 @@ const EditProfileModal = () => {
 	);
 };
 
-export default EditProfileModal;
+export default Settings;

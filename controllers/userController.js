@@ -26,6 +26,10 @@ const fetchMyProfileGet = async (req, res) => {
 // Update my profile
 const updateMyProfile = async (req, res) => {
 	try {
+		Object.values(req.body).forEach((value) => {
+			if (value.trim() === "") res.status(406).send();
+		});
+
 		// Hashing our updated password
 		if (req.body.password)
 			req.body.password = await bcrypt.hash(req.body.password, 8);
