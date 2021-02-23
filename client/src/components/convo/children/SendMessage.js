@@ -1,7 +1,7 @@
 import React from "react";
 
 const SendMessage = () => {
-	return <div>Send Message</div>;
+	return <div></div>;
 };
 
 export default SendMessage;

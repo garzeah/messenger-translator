@@ -1,59 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Avatar from "@material-ui/core/Avatar";
+import React, { useEffect } from "react";
 
+import DisplayAvatar from "../../DisplayAvatar";
 import Settings from "./Settings";
-import UserAvatar from "./UserAvatar";
+import ChangeAvatar from "./ChangeAvatar";
 import "../Sidebar.css";
 
-const useStyles = makeStyles((theme) => ({
-	root: {
-		display: "flex",
-		"& > *": {
-			margin: theme.spacing(1)
-		}
-	},
-	avatar: {
-		width: theme.spacing(6),
-		height: theme.spacing(6),
-		borderRadius: "50px"
-	}
-}));
-
-const SidebarHeader = () => {
-	const classes = useStyles();
-	// State management for user info. and modal
-	const [user, setUser] = useState({});
-
+const SidebarHeader = ({ user, setUser }) => {
 	// Retrieves user information
 	useEffect(() => {
-		async function retrieveUserInformation() {
+		const retrieveUserInformation = async () => {
 			// Fetching user data
-			let userData = await fetch("/api/users/me");
-			userData = await userData.json();
-			setUser(userData);
-		}
+			let data = await fetch("/api/users/me");
+			data = await data.json();
+			setUser(data);
+		};
 		retrieveUserInformation();
-	}, []);
-
-	// Avatar JSX
-	let avatarCard = user.avatar ? (
-		<img
-			className={classes.avatar}
-			src={`data:image/jpeg;base64,${user.avatar}`}
-			alt={`${user.firstName} ${user.lastName}`}
-		/>
-	) : (
-		<Avatar
-			className={classes.avatar}
-			alt={`${user.firstName} ${user.lastName}`}
-		/>
-	);
+	}, [setUser]);
 
 	return (
 		<div className="sidebarHeader">
 			<div className="sidebarHeaderUser">
-				<UserAvatar> {avatarCard} </UserAvatar>
+				<ChangeAvatar>
+					<DisplayAvatar user={user} width="6" height="6" />{" "}
+				</ChangeAvatar>
 				<h2 style={{ marginLeft: "15px" }}>
 					{user.firstName} {user.lastName}
 				</h2>

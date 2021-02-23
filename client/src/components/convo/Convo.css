@@ -1,0 +1,73 @@
+/* Conversation Container */
+.convo {
+	margin: 10px 20px;
+	width: 60%;
+}
+
+#noConvos {
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	margin: 10px 5px;
+}
+
+/* Conversation Header */
+.convoHeader {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	margin-bottom: 30px;
+}
+
+/* Conversation Body */
+.messageHeader {
+	display: flex;
+	margin-bottom: 7px;
+	color: #c2cfe4;
+}
+
+.sender {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	align-items: flex-end;
+	margin-bottom: 10px;
+}
+
+#senderContent {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: #f4f6fa;
+	color: #9cacc6;
+	border-radius: 50px 50px 0px 50px;
+	padding: 13px;
+}
+
+#senderTime {
+	color: #c2cfe4;
+}
+
+.recipient {
+	display: table;
+	display: flex;
+	margin-bottom: 10px;
+}
+
+.recipientMessage {
+	margin-left: 10px;
+}
+
+#recipientContent {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: #3d91ff;
+	border-radius: 0px 50px 50px 50px;
+	padding: 13px;
+	color: white;
+}
+
+#recipientTime {
+	margin-left: 5px;
+}

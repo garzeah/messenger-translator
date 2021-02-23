@@ -1,32 +1,16 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Avatar from "@material-ui/core/Avatar";
+
+import DisplayAvatar from "../../DisplayAvatar";
 import "../Sidebar.css";
 
-const useStyles = makeStyles((theme) => ({
-	root: {
-		display: "flex",
-		"& > *": {
-			margin: theme.spacing(1)
-		}
-	},
-	avatar: {
-		width: theme.spacing(6),
-		height: theme.spacing(6),
-		borderRadius: "50px"
-	}
-}));
-
-const PreviewItem = ({ type, id, avatar, name, email, setSearchInput }) => {
-	const classes = useStyles();
-
+const PreviewConvo = ({ type, user, setSearchInput, setCurrConvo }) => {
 	const clickHandler = async () => {
 		// Will send a post request to initiate a conversation
 		try {
 			// Our data to send to the server
 			await fetch("/api/conversations/new", {
 				method: "POST",
-				body: JSON.stringify({ email }),
+				body: JSON.stringify({ email: user.email }),
 				headers: { "Content-Type": "application/json" }
 			});
 
@@ -37,26 +21,17 @@ const PreviewItem = ({ type, id, avatar, name, email, setSearchInput }) => {
 		}
 	};
 
-	// Displaying Avatar JSX
-	let avatarCard = avatar ? (
-		<img
-			className={classes.avatar}
-			src={`${window.location.origin}/api/users/avatar/${id}`}
-			alt={name}
-		/>
-	) : (
-		<Avatar className={classes.avatar} alt={name} />
-	);
-
 	return (
 		<div
-			className="previewItem"
-			onClick={type === "user" ? clickHandler : null}
+			className="previewConvo"
+			onClick={type === "user" ? clickHandler : () => setCurrConvo(user)}
 		>
-			{avatarCard}
-			<p style={{ marginLeft: "15px" }}>{name}</p>
+			<DisplayAvatar user={user} width="6" height="6" />
+			<p
+				style={{ marginLeft: "15px" }}
+			>{`${user.firstName} ${user.lastName}`}</p>
 		</div>
 	);
 };
 
-export default PreviewItem;
+export default PreviewConvo;
