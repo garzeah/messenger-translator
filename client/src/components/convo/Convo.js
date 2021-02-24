@@ -37,7 +37,7 @@ const Conversation = ({ currConvo }) => {
 		time = time.join(":");
 
 		// This is the person who sent the message (sender)
-		if (sender === currConvo.userID) {
+		if (sender === currConvo._id) {
 			return (
 				<div className="recipient" key={_id}>
 					<DisplayAvatar user={currConvo} width={4} height={4} />
