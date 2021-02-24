@@ -24,8 +24,8 @@ const SidebarList = ({
 				setConvoList(data);
 
 				// This sets the default conversation to show
-				if (Object.keys(currConvo).length === 0)
-					setCurrConvo(data[data.length - 1]);
+				// if (Object.keys(currConvo).length === 0)
+				// 	setCurrConvo(data[data.length - 1]);
 			} else setUserList(data);
 		};
 
@@ -75,7 +75,11 @@ const SidebarList = ({
 		);
 	});
 
-	return <div>{searchInput ? userListCard : convoListCard}</div>;
+	return (
+		<div className="sidebarList">
+			{searchInput ? userListCard : convoListCard}
+		</div>
+	);
 };
 
 export default SidebarList;

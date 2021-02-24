@@ -1,21 +1,19 @@
 /* Sidebar */
 .sidebar {
 	padding: 10px 20px;
-	min-width: 25vh;
-	width: 80vh;
-	height: 100vh;
+	width: 50vh;
 }
 
 #chatsText {
 	font-size: 25px;
-	margin-top: 35px;
+	margin-top: 10px;
 }
 
 /*  Sidebar Header */
 .sidebarHeader {
 	display: flex;
 	justify-content: space-between;
-	margin: 10px 10px;
+	height: 7.5vh;
 }
 
 .sidebarHeaderUser {
@@ -43,6 +41,11 @@
 }
 
 /* Sidebar List */
+.sidebarList {
+	height: 72.5vh;
+	overflow-y: auto;
+}
+
 .activeConvo {
 	display: flex;
 	align-items: center;
@@ -58,6 +61,7 @@
 	align-items: center;
 	padding: 5px 0;
 	padding-left: 5px;
+	margin: 3px 0;
 }
 
 .previewConvo:hover {

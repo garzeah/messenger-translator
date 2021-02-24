@@ -45,12 +45,12 @@ const PreviewConvo = ({
 	const activeConvo = () => {
 		if (currConvo) {
 			if (currConvo._id === user._id) return "activeConvo";
-			else return "previewConvo";
 		}
+		return "previewConvo";
 	};
 
 	// Creating 2 separate cards to avoid too many terneray operators
-	const userListCard = (
+	const userItemCard = (
 		<div className="previewConvo" onClick={clickHandler}>
 			<DisplayAvatar id={user._id} user={user} width={6} height={6} />
 			<p id="convoItemOwner">{`${user.firstName} ${user.lastName}`}</p>
@@ -64,7 +64,7 @@ const PreviewConvo = ({
 		</div>
 	);
 
-	return <div>{type === "user" ? userListCard : convoItemCard}</div>;
+	return <div>{type === "user" ? userItemCard : convoItemCard}</div>;
 };
 
 export default PreviewConvo;

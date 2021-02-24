@@ -9,7 +9,7 @@ const Messenger = () => {
 	// Your profile information
 	const [user, setUser] = useState({});
 	// Keeps track of your current conversation
-	const [currConvo, setCurrConvo] = useState({});
+	const [currConvo, setCurrConvo] = useState(null);
 
 	// Will be used to redirect user
 	const history = useHistory();
@@ -37,13 +37,7 @@ const Messenger = () => {
 				user={user}
 				setUser={setUser}
 			/>
-			{currConvo ? (
-				<Convo currConvo={currConvo} user={user} />
-			) : (
-				<h2 id="noConvos">
-					Click the search bar to start connecting with people!
-				</h2>
-			)}
+			{currConvo ? <Convo currConvo={currConvo} user={user} /> : null}
 		</div>
 	);
 };
