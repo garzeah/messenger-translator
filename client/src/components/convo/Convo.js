@@ -41,10 +41,10 @@ const Conversation = ({ currConvo }) => {
 			return (
 				<div className="recipient" key={_id}>
 					<DisplayAvatar user={currConvo} width={4} height={4} />
-					<div className="recipientMessage">
+					<div style={{ marginLeft: "10px" }}>
 						<div className="messageHeader">
 							<p>{currConvo.displayName}</p>
-							<p id="recipientTime">{time}</p>
+							<p style={{ marginLeft: "5px" }}>{time}</p>
 						</div>
 						<div id="recipientContent">
 							<p>{content}</p>

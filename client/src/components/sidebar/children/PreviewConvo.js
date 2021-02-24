@@ -7,6 +7,7 @@ const PreviewConvo = ({
 	type,
 	user,
 	setSearchInput,
+	convoList,
 	currConvo,
 	setCurrConvo
 }) => {

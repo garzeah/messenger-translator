@@ -22,10 +22,6 @@ const SidebarList = ({
 			const data = await res.json();
 			if (type === "convo") {
 				setConvoList(data);
-
-				// This sets the default conversation to show
-				// if (Object.keys(currConvo).length === 0)
-				// 	setCurrConvo(data[data.length - 1]);
 			} else setUserList(data);
 		};
 
@@ -69,6 +65,7 @@ const SidebarList = ({
 				type="convo"
 				key={convoList[key].conversationID}
 				user={convoList[key]}
+				convoList={convoList}
 				currConvo={currConvo}
 				setCurrConvo={setCurrConvo}
 			/>
