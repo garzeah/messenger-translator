@@ -1,5 +1,5 @@
 /* Conversation Container */
-.convo {
+.convoContainer {
 	background: #ffffff;
 	width: 100%;
 	height: 100%;
@@ -17,7 +17,7 @@
 }
 
 /* Conversation Body */
-.convoContent {
+.convoBody {
 	height: 78vh;
 	overflow-y: auto;
 }
@@ -28,6 +28,7 @@
 	color: #c2cfe4;
 }
 
+/* Sender Messages */
 .sender {
 	display: flex;
 	flex-direction: column;
@@ -44,10 +45,11 @@
 	align-items: center;
 	background: #f4f6fa;
 	color: #9cacc6;
-	border-radius: 50px 50px 0px 50px;
+	border-radius: 25px 25px 0px 25px;
 	padding: 1rem;
 }
 
+/* Recipient Messages */
 .recipient {
 	display: flex;
 	margin: 10px 40px;
@@ -62,12 +64,12 @@
 	);
 	background-size: cover;
 	background-repeat: no-repeat;
-	border-radius: 0px 50px 50px 50px;
+	border-radius: 0px 25px 25px 25px;
 	padding: 1rem;
 	color: white;
 }
 
-/* Message Container */
+/* Send Message Container */
 .messageContainer {
 	display: flex;
 	justify-content: center;

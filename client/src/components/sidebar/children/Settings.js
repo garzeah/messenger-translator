@@ -72,7 +72,7 @@ const Settings = () => {
 				open={Boolean(anchorEl)}
 				onClose={() => setAnchorEl(null)}
 			>
-				<MenuItem onClick={() => setOpen(true)}>Edit Display Name</MenuItem>
+				{/*<MenuItem onClick={() => setOpen(true)}>Edit Display Name</MenuItem>*/}
 				<MenuItem onClick={handleLogout}>Logout</MenuItem>
 			</Menu>
 			<MoreHorizIcon

@@ -58,29 +58,25 @@ const FileUpload = () => {
 				multiple
 				type="file"
 			/>
-			<div className="modalAvatarBodyNoInput">
-				{file ? (
-					<React.Fragment>
-						<ImageThumb image={file} />
-						<Button
-							style={{ marginTop: "15px" }}
-							onClick={onFileUpload}
-							variant="contained"
-							color="primary"
-							component="span"
-						>
-							Upload
-						</Button>
-					</React.Fragment>
-				) : null}
-			</div>
+			{file ? (
+				<div className="avatarPreviewAndUploadContainer">
+					<ImageThumb image={file} />
+					<Button
+						style={{ marginLeft: "10px" }}
+						onClick={onFileUpload}
+						variant="contained"
+						color="primary"
+						size="small"
+					>
+						Upload
+					</Button>
+				</div>
+			) : null}
 		</div>
 	);
 };
 
-/**
- * Component to display thumbnail of image.
- */
+// Component to display thumbnail of image.
 const ImageThumb = ({ image }) => {
 	const classes = useStyles();
 
@@ -91,7 +87,7 @@ const ImageThumb = ({ image }) => {
 				src={URL.createObjectURL(image)}
 				alt={image.name}
 			/>
-			<p style={{ marginLeft: "15px" }}>This is how your avatar will look!</p>
+			<p style={{ marginLeft: "15px" }}>Do you want to upload this?</p>
 		</div>
 	);
 };

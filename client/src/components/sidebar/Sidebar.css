@@ -2,16 +2,12 @@
 .sidebar {
 	background-color: #f5f7fb;
 	min-width: 30vw;
-	padding: 10px 20px;
-}
-
-#chatsText {
-	font-size: 25px;
-	margin-top: 35px;
+	padding: 0px 20px;
+	height: 100%;
 }
 
 /*  Sidebar Header */
-.sidebarHeader {
+.sidebarHeaderContainer {
 	display: flex;
 	justify-content: space-between;
 }
@@ -19,6 +15,7 @@
 .sidebarHeaderUser {
 	display: flex;
 	align-items: center;
+	height: 10vh;
 }
 
 .sidebarHeaderUserSettings {
@@ -33,15 +30,28 @@
 	transform: scale(1.2);
 }
 
+/* Chat Text */
+#chatsText {
+	display: flex;
+	align-items: center;
+	font-size: 25px;
+	height: 3vh;
+	margin: 1vh 0;
+}
+
 /* Sidebar User Search */
 .searchUser {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	background: #e9eef8;
 	border-radius: 10px;
+	height: 5vh;
 }
 
 /* Sidebar List */
 .sidebarList {
-	height: 73vh;
+	height: 80vh;
 	overflow-y: auto;
 }
 
@@ -52,7 +62,7 @@
 	box-shadow: inset -1px 0 0 darken(lightgray, 10);
 	border-radius: 10px;
 	padding: 10px 0px 10px 5px;
-	margin: 10px 5px 10px 0;
+	margin: 10px 13px 10px 0;
 	filter: drop-shadow(0 0 0.03rem #c1cbd9);
 }
 
@@ -62,7 +72,7 @@
 	background: #f9fafc;
 	border-radius: 10px;
 	padding: 10px 0px 10px 5px;
-	margin: 10px 5px 10px 0;
+	margin: 10px 13px 10px 0;
 	filter: drop-shadow(0 0 0.03rem #c1cbd9);
 }
 
@@ -77,11 +87,10 @@
 	margin-left: 15px;
 }
 
-/* Sidebar Modal */
+/* Modals */
 .modalHeader {
 	display: flex;
 	justify-content: space-between;
-	margin-top: 15px;
 }
 
 .modalExit:hover {
@@ -91,18 +100,17 @@
 	transform: scale(1.2);
 }
 
-/* Sidebar Change Avatar Modal */
-.modalAvatarBodyNoInput {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-
-.modalAvatar:hover {
+/* Change Avatar Modal */
+.avatarButton:hover {
 	cursor: pointer;
 	-webkit-transform: scale(1.1);
 	-ms-transform: scale(1.1);
 	transform: scale(1.1);
+}
+
+/* File Upload */
+.avatarPreviewAndUploadContainer {
+	display: flex;
 }
 
 .previewAvatar {

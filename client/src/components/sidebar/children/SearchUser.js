@@ -3,8 +3,7 @@ import {
 	FormControl,
 	OutlinedInput,
 	InputAdornment,
-	withStyles,
-	Box
+	withStyles
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 
@@ -35,8 +34,8 @@ const SearchUser = ({ searchInput, setSearchInput }) => {
 	};
 
 	return (
-		<Box my={2}>
-			<FormControl className="searchUser" fullWidth>
+		<div className="searchUser">
+			<FormControl fullWidth>
 				<StyledInput
 					onChange={(e) => handleChange(e)}
 					value={searchInput}
@@ -48,7 +47,7 @@ const SearchUser = ({ searchInput, setSearchInput }) => {
 					}
 				/>
 			</FormControl>
-		</Box>
+		</div>
 	);
 };
 

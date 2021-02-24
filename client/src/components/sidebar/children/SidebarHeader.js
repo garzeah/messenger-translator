@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 import DisplayAvatar from "../../DisplayAvatar";
 import Settings from "./Settings";
-import ChangeAvatar from "./ChangeAvatar";
+import ChangeAvatar from "../modals/ChangeAvatar";
 import "../Sidebar.css";
 
 const SidebarHeader = ({ user, setUser }) => {
@@ -18,7 +18,7 @@ const SidebarHeader = ({ user, setUser }) => {
 	}, [setUser]);
 
 	return (
-		<div className="sidebarHeader">
+		<div className="sidebarHeaderContainer">
 			<div className="sidebarHeaderUser">
 				<ChangeAvatar>
 					<DisplayAvatar user={user} width={6} height={6} />

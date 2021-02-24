@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import DisplayAvatar from "../DisplayAvatar";
 
 import ConvoHeader from "./children/ConvoHeader";
@@ -7,6 +7,11 @@ import SendMessage from "./children/SendMessage";
 const Conversation = ({ currConvo }) => {
 	// Stores messages
 	const [currConvoMessages, setCurrConvoMessages] = useState({});
+
+	// Will scroll us to the bottom of a conversation
+	const setRef = useCallback((node) => {
+		if (node) node.scrollIntoView({ smooth: true });
+	}, []);
 
 	// Retrieves the conversation between sender and recipient
 	useEffect(() => {
@@ -24,8 +29,13 @@ const Conversation = ({ currConvo }) => {
 		}
 	}, [currConvo, currConvo.conversationID]);
 
-	const messagesCard = Object.keys(currConvoMessages).map((key) => {
+	const messagesCard = Object.keys(currConvoMessages).map((key, idx) => {
 		let { sender, content, timeCreated, _id } = currConvoMessages[key];
+
+		let lastMessage = currConvoMessages.length - 1 === idx;
+		console.log(currConvoMessages.length - 1);
+		console.log(idx);
+		console.log(lastMessage);
 
 		// Making our timeCreated variable more understandable
 		// let date = new Date(timeCreated).toLocaleDateString();
@@ -59,7 +69,7 @@ const Conversation = ({ currConvo }) => {
 					<div className="messageHeader">
 						<p>{time}</p>
 					</div>
-					<div id="senderContent">
+					<div id="senderContent" ref={lastMessage ? setRef : null}>
 						<p>{content}</p>
 					</div>
 				</div>
@@ -68,9 +78,9 @@ const Conversation = ({ currConvo }) => {
 	});
 
 	return (
-		<div className="convo">
+		<div className="convoContainer">
 			<ConvoHeader currConvo={currConvo} />
-			<div className="convoContent">{messagesCard}</div>
+			<div className="convoBody">{messagesCard}</div>
 			<SendMessage currConvo={currConvo} />
 		</div>
 	);
