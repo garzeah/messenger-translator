@@ -1,6 +1,7 @@
 /* Sidebar */
 .sidebar {
-	padding: 10px 20px;
+	padding: 10px 0px;
+	margin-left: 10px;
 	width: 50vh;
 }
 
@@ -42,6 +43,7 @@
 
 /* Sidebar List */
 .sidebarList {
+	padding-right: 3px;
 	height: 72.5vh;
 	overflow-y: auto;
 }
