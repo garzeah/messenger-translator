@@ -2,7 +2,7 @@ import React from "react";
 import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
 
-const DisplayAvatar = ({ user, width, height }) => {
+const DisplayAvatar = ({ id, user, width, height }) => {
 	const useStyles = makeStyles((theme) => ({
 		root: {
 			display: "flex",
@@ -22,7 +22,7 @@ const DisplayAvatar = ({ user, width, height }) => {
 	let avatarCard = user.avatar ? (
 		<img
 			className={classes.avatar}
-			src={`${window.location.origin}/api/users/avatar/${user.userID}`}
+			src={`${window.location.origin}/api/users/avatar/${id}`}
 			alt={`${user.firstName} ${user.lastName}`}
 		/>
 	) : (

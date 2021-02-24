@@ -31,7 +31,12 @@ const Messenger = () => {
 
 	return (
 		<div className="messenger">
-			<Sidebar setCurrConvo={setCurrConvo} user={user} setUser={setUser} />
+			<Sidebar
+				currConvo={currConvo}
+				setCurrConvo={setCurrConvo}
+				user={user}
+				setUser={setUser}
+			/>
 			{currConvo ? (
 				<Convo currConvo={currConvo} user={user} />
 			) : (

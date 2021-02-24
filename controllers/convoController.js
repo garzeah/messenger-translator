@@ -88,10 +88,12 @@ const fetchAllMyConversationsGet = async (req, res) => {
 		if (userData) {
 			conversationList[i] = {
 				...conversationList[i],
+				_id: userData._id,
 				firstName: userData.firstName,
 				lastName: userData.lastName,
 				email: userData.email,
-				avatar: userData.avatar
+				avatar: userData.avatar,
+				userID: undefined
 			};
 		}
 	}
@@ -111,25 +113,23 @@ const fetchConversationGet = async (req, res) => {
 
 // Send message
 const sendMessagePost = async (req, res) => {
-	// Removing leading and ending whitespace
-	const message = req.body.message.trim();
-
 	try {
 		// If our message is empty then
-		if (!message) return res.sendStatus(406);
+		if (!req.body.message.trim()) return res.sendStatus(406);
 
 		// Otherwise, message is not empty to let's save it
 		const newMessage = new Message({
-			conversationID: req.params.id,
+			conversationID: req.body.conversationID,
 			sender: req.user._id,
-			content: message,
+			content: req.body.message.trim(),
 			timeCreated: new Date()
 		});
 
 		await newMessage.save();
 		res.sendStatus(202);
-	} catch (err) {}
-	res.sendStatus(406);
+	} catch (err) {
+		res.sendStatus(406);
+	}
 };
 
 module.exports = {

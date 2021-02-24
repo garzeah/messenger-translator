@@ -5,6 +5,7 @@
 		overflow: scroll;
 		height: 100%;
 		font-family: "Open Sans";
+		background-color: #fcfcfc !important;
 	}
 }
 
@@ -15,6 +16,7 @@
 		overflow: hidden;
 		height: 100%;
 		font-family: "Open Sans";
+		background-color: #fcfcfc !important;
 	}
 }
 

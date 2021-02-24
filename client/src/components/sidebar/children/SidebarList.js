@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+
 import PreviewConvo from "./PreviewConvo";
 
 const SidebarList = ({
@@ -6,6 +7,7 @@ const SidebarList = ({
 	route,
 	searchInput,
 	setSearchInput,
+	currConvo,
 	setCurrConvo
 }) => {
 	// Stores conversations or possible users to message
@@ -15,35 +17,20 @@ const SidebarList = ({
 	// Retrieves all your conversations or users to talk to
 	// and sets the default conversation
 	useEffect(() => {
-		const retrieveContactsList = async () => {
+		const retrieveLists = async () => {
 			const res = await fetch(route);
 			const data = await res.json();
 			if (type === "convo") {
 				setConvoList(data);
 
 				// This sets the default conversation to show
-				setCurrConvo(data[data.length - 1]);
+				if (Object.keys(currConvo).length === 0)
+					setCurrConvo(data[data.length - 1]);
 			} else setUserList(data);
 		};
 
-		retrieveContactsList();
-	}, [type, route, setCurrConvo]);
-
-	// List of conversations a user has
-	let convoListContent = Object.keys(convoList).map((_, idx, convos) => {
-		// Wrote it in this manner so we can reverse the array
-		// while returning each appropriate convo in O(n)
-		let key = convos[convoList.length - 1 - idx];
-		return (
-			<PreviewConvo
-				type="convo"
-				key={convoList[key].conversationID}
-				id={convoList[key].userID}
-				user={convoList[key]}
-				setCurrConvo={setCurrConvo}
-			/>
-		);
-	});
+		retrieveLists();
+	}, [type, route, currConvo, setCurrConvo]);
 
 	// List of possible users a user can add
 	let filteredUserList = Object.values(userList).reduce((filtered, user) => {
@@ -58,19 +45,37 @@ const SidebarList = ({
 	}, []);
 
 	// List of users to add
-	let userListContent = Object.keys(filteredUserList).map((key) => {
+	let userListCard = Object.keys(filteredUserList).map((key) => {
 		return (
 			<PreviewConvo
 				type="user"
 				key={filteredUserList[key]._id}
-				id={filteredUserList[key]._id}
 				user={filteredUserList[key]}
+				currConvo={currConvo}
+				setCurrConvo={setCurrConvo}
 				setSearchInput={setSearchInput}
 			/>
 		);
 	});
 
-	return <div>{type === "convo" ? convoListContent : userListContent}</div>;
+	// List of conversations a user has
+	let convoListCard = Object.keys(convoList).map((_, idx, convos) => {
+		// Wrote it in this manner so we can reverse the array
+		// while returning each appropriate convo in O(n)
+		let key = convos[convoList.length - 1 - idx];
+
+		return (
+			<PreviewConvo
+				type="convo"
+				key={convoList[key].conversationID}
+				user={convoList[key]}
+				currConvo={currConvo}
+				setCurrConvo={setCurrConvo}
+			/>
+		);
+	});
+
+	return <div>{searchInput ? userListCard : convoListCard}</div>;
 };
 
 export default SidebarList;

@@ -4,7 +4,7 @@ import DisplayAvatar from "../DisplayAvatar";
 import ConvoHeader from "./children/ConvoHeader";
 import SendMessage from "./children/SendMessage";
 
-const Conversation = ({ currConvo, user }) => {
+const Conversation = ({ currConvo }) => {
 	// Stores messages
 	const [currConvoMessages, setCurrConvoMessages] = useState({});
 
@@ -40,7 +40,7 @@ const Conversation = ({ currConvo, user }) => {
 		if (sender === currConvo.userID) {
 			return (
 				<div className="recipient" key={_id}>
-					<DisplayAvatar user={currConvo} width="4" height="4" />
+					<DisplayAvatar user={currConvo} width={4} height={4} />
 					<div className="recipientMessage">
 						<div className="messageHeader">
 							<p>{`${currConvo.firstName} ${currConvo.lastName}`}</p>
@@ -70,8 +70,8 @@ const Conversation = ({ currConvo, user }) => {
 	return (
 		<div className="convo">
 			<ConvoHeader currConvo={currConvo} />
-			{messagesCard}
-			<SendMessage />
+			<div className="convoBody">{messagesCard}</div>
+			<SendMessage currConvo={currConvo} />
 		</div>
 	);
 };
