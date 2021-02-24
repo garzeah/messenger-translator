@@ -7,7 +7,7 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 
-import EditDisplayName from "../modals/EditDisplayName";
+// import EditDisplayName from "../modals/EditDisplayName";
 
 function getModalStyle() {
 	const top = 50;

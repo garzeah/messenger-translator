@@ -70,10 +70,8 @@ const Conversation = ({ currConvo }) => {
 	return (
 		<div className="convo">
 			<ConvoHeader currConvo={currConvo} />
-			<div className="convoBodyContainer">
-				<div className="convoContent">{messagesCard}</div>
-				<SendMessage currConvo={currConvo} />
-			</div>
+			<div className="convoContent">{messagesCard}</div>
+			<SendMessage currConvo={currConvo} />
 		</div>
 	);
 };
