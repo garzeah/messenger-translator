@@ -32,15 +32,19 @@ const SidebarList = ({
 		retrieveLists();
 	}, [type, route, currConvo, setCurrConvo]);
 
+	console.log(userList);
+
 	// List of possible users a user can add
 	let filteredUserList = Object.values(userList).reduce((filtered, user) => {
 		// Filtering out users by their email or name
-		if (
-			`${user.firstName} ${user.lastName}`.includes(searchInput) ||
-			user.email.includes(searchInput)
-		) {
-			filtered.push(user);
-		}
+		console.log(user.displayName);
+		console.log(searchInput);
+		// if (
+		// 	user.displayName.includes(searchInput) ||
+		// 	user.email.includes(searchInput)
+		// ) {
+		// 	filtered.push(user);
+		// }
 		return filtered;
 	}, []);
 

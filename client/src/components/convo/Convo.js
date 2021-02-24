@@ -43,7 +43,7 @@ const Conversation = ({ currConvo }) => {
 					<DisplayAvatar user={currConvo} width={4} height={4} />
 					<div className="recipientMessage">
 						<div className="messageHeader">
-							<p>{`${currConvo.firstName} ${currConvo.lastName}`}</p>
+							<p>{currConvo.displayName}</p>
 							<p id="recipientTime">{time}</p>
 						</div>
 						<div id="recipientContent">
@@ -70,8 +70,10 @@ const Conversation = ({ currConvo }) => {
 	return (
 		<div className="convo">
 			<ConvoHeader currConvo={currConvo} />
-			<div className="convoBody">{messagesCard}</div>
-			<SendMessage currConvo={currConvo} />
+			<div className="convoBodyContainer">
+				<div className="convoContent">{messagesCard}</div>
+				<SendMessage currConvo={currConvo} />
+			</div>
 		</div>
 	);
 };

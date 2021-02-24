@@ -1,8 +1,8 @@
 /* Sidebar */
 .sidebar {
-	padding: 10px 5px;
-	margin-left: 10px;
-	width: 50vh;
+	background-color: #f5f7fb;
+	min-width: 30vw;
+	padding: 10px 20px;
 }
 
 #chatsText {
@@ -14,7 +14,6 @@
 .sidebarHeader {
 	display: flex;
 	justify-content: space-between;
-	height: 7.5vh;
 }
 
 .sidebarHeaderUser {
@@ -36,9 +35,8 @@
 
 /* Sidebar User Search */
 .searchUser {
-	background: #e9eef9;
+	background: #e9eef8;
 	border-radius: 10px;
-	min-width: 300px;
 }
 
 /* Sidebar List */

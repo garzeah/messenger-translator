@@ -1,7 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap");
 
 /* General Styles */
-h2 {
+#registerHeader,
+#loginHeader {
 	font-family: "Open Sans";
 	font-weight: 600;
 	font-size: 30px;
@@ -39,6 +40,7 @@ h2 {
 	padding: 15px 60px !important;
 	background: #3a8dff !important;
 	text-transform: none !important;
+	margin-bottom: 30px !important;
 }
 
 /* Mobile View */
@@ -52,6 +54,7 @@ h2 {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		margin-bottom: 30px;
 	}
 
 	#sideText {
