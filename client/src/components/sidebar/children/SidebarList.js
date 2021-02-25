@@ -11,8 +11,8 @@ const SidebarList = ({
 	setCurrConvo
 }) => {
 	// Stores conversations or possible users to message
-	const [convoList, setConvoList] = useState({});
 	const [userList, setUserList] = useState({});
+	const [convoList, setConvoList] = useState({});
 
 	// Retrieves all your conversations or users to talk to
 	// and sets the default conversation
@@ -21,6 +21,13 @@ const SidebarList = ({
 			const res = await fetch(route);
 			const data = await res.json();
 			if (type === "convo") {
+				// If there is no current conversation...
+				if (currConvo === null) {
+					// If a user has no contacts... do nothing
+					if (data.length === 0) return null;
+					// Set the most recent convo by default
+					setCurrConvo(data[data.length - 1]);
+				}
 				setConvoList(data);
 			} else setUserList(data);
 		};

@@ -32,10 +32,8 @@ const Conversation = ({ currConvo }) => {
 	const messagesCard = Object.keys(currConvoMessages).map((key, idx) => {
 		let { sender, content, timeCreated, _id } = currConvoMessages[key];
 
+		// Keeps track of last message to auto scroll
 		let lastMessage = currConvoMessages.length - 1 === idx;
-		console.log(currConvoMessages.length - 1);
-		console.log(idx);
-		console.log(lastMessage);
 
 		// Making our timeCreated variable more understandable
 		// let date = new Date(timeCreated).toLocaleDateString();

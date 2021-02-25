@@ -42,7 +42,7 @@ const SendMessage = ({ currConvo }) => {
 				}
 			);
 
-			// Clear input if request is successful
+			// Clear input and move convo to top of convoList
 			if (res.status === 202) setMessage("");
 		} catch (err) {
 			console.log(err);
