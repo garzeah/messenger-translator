@@ -17,14 +17,12 @@ const Conversation = ({ currConvo }) => {
 	useEffect(() => {
 		// If it exists...
 		if (currConvo.conversationID) {
-			console.log(currConvo);
 			const retrieveMessages = async () => {
 				// Fetching user data
 				let data = await fetch(
 					`/api/conversations/${currConvo.conversationID}`
 				);
 				data = await data.json();
-				console.log(data);
 				setCurrConvoMessages(data);
 			};
 			retrieveMessages();
@@ -84,6 +82,7 @@ const Conversation = ({ currConvo }) => {
 				</div>
 			);
 		}
+		return null;
 	});
 
 	return (
