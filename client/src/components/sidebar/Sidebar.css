@@ -46,12 +46,12 @@
 	align-items: center;
 	background: #e9eef8;
 	border-radius: 10px;
-	height: 5vh;
+	height: 7vh;
 }
 
 /* Sidebar List */
 .sidebarList {
-	height: 80vh;
+	height: 78vh;
 	overflow-y: auto;
 }
 

@@ -216,7 +216,7 @@ const Register = () => {
 						alt="Message Symbol"
 					></img>
 				</div>
-				<p id="sideText">Converse with anyone with any language</p>
+				<p id="sideText">Converse with anyone in any language</p>
 			</div>
 			{formContainer}
 		</div>

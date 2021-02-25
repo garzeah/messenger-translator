@@ -185,7 +185,7 @@ const Login = () => {
 		<div className="pageContainer">
 			<div className="sideContainer">
 				<img id="messengerIcon" src={messengerIcon} alt="Decipher Logo"></img>
-				<p id="sideText">Converse with anyone with any language</p>
+				<p id="sideText">Converse with anyone in any language</p>
 			</div>
 			{formContainer}
 			{snackbars}
