@@ -7,7 +7,6 @@ const PreviewConvo = ({
 	type,
 	user,
 	setSearchInput,
-	convoList,
 	currConvo,
 	setCurrConvo
 }) => {
@@ -15,12 +14,15 @@ const PreviewConvo = ({
 		// Will send a post request to initiate a conversation
 		try {
 			// Our data to send to the server
-			let data = await fetch("/api/conversations/new", {
+			let convo = await fetch("/api/conversations/new", {
 				method: "POST",
 				body: JSON.stringify({ email: user.email }),
-				headers: { "Content-Type": "application/json" }
+				headers: {
+					"Content-Type": "application/json"
+				}
 			});
-			data = await data.json();
+
+			convo = await convo.json();
 
 			// Clear user input
 			setSearchInput("");
@@ -30,7 +32,7 @@ const PreviewConvo = ({
 
 			// Sets the current conversation when clicking a user in search
 			setCurrConvo({
-				conversationID: data,
+				conversationID: convo.id,
 				_id,
 				displayName,
 				email,

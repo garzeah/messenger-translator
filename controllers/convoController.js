@@ -28,7 +28,7 @@ const newConversationPost = async (req, res) => {
 
 		// If a conversation already exists return it
 		if (conversation) {
-			return res.status(200).send(conversation.id);
+			return res.status(200).send(conversation);
 		}
 
 		// Otherwise, lets create a new conversation and save it
@@ -46,7 +46,7 @@ const newConversationPost = async (req, res) => {
 
 		// Saving it to our database and sending the new convo
 		await newConversation.save();
-		res.status(200).send(newConversation._id);
+		res.status(200).send(newConversation);
 	} catch (err) {
 		res.status(500).send(err);
 	}
@@ -115,8 +115,6 @@ const fetchConversationGet = async (req, res) => {
 
 // Send message
 const sendMessagePost = async (req, res) => {
-	console.log(req.body);
-
 	try {
 		// If our message is empty then
 		if (!req.body.message.trim()) return res.sendStatus(406);
