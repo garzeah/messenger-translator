@@ -54,7 +54,7 @@ const Conversation = ({ currConvo }) => {
 							<p>{currConvo.displayName}</p>
 							<p style={{ marginLeft: "5px" }}>{time}</p>
 						</div>
-						<div id="recipientContent">
+						<div id="recipientContent" ref={lastMessage ? setRef : null}>
 							<p>{content}</p>
 						</div>
 					</div>
