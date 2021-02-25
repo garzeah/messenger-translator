@@ -1,3 +1,5 @@
+const cryptoRandomString = require("crypto-random-string");
+
 const User = require("../models/User");
 const Conversation = require("../models/Conversation");
 const Message = require("../models/Message");
@@ -26,11 +28,12 @@ const newConversationPost = async (req, res) => {
 
 		// If a conversation already exists return it
 		if (conversation) {
-			return res.status(200).send(conversation._id);
+			return res.status(200).send(conversation.id);
 		}
 
 		// Otherwise, lets create a new conversation and save it
 		const newConversation = new Conversation({
+			id: cryptoRandomString({ length: 24, type: "alphanumeric" }),
 			participants: [
 				{
 					participant: req.user._id
@@ -69,14 +72,14 @@ const fetchAllMyConversationsGet = async (req, res) => {
 		conversations[i].participants[0].participant == req.user._id
 			? null
 			: conversationList.push({
-					conversationID: conversations[i]._id,
+					conversationID: conversations[i].id,
 					userID: conversations[i].participants[0].participant
 			  });
 
 		conversations[i].participants[1].participant == req.user._id
 			? null
 			: conversationList.push({
-					conversationID: conversations[i]._id,
+					conversationID: conversations[i].id,
 					userID: conversations[i].participants[1].participant
 			  });
 	}
@@ -112,6 +115,8 @@ const fetchConversationGet = async (req, res) => {
 
 // Send message
 const sendMessagePost = async (req, res) => {
+	console.log(req.body);
+
 	try {
 		// If our message is empty then
 		if (!req.body.message.trim()) return res.sendStatus(406);
@@ -132,12 +137,13 @@ const sendMessagePost = async (req, res) => {
 		*/
 
 		// Creating a copy
-		const copyOfConvo = await Conversation.findById({
-			_id: req.body.conversationID
+		const copyOfConvo = await Conversation.findOne({
+			id: req.body.conversationID
 		});
 
 		// Initializing our model to save to our DB
 		const copyToSave = new Conversation({
+			id: req.body.conversationID,
 			participants: [
 				{
 					participant: copyOfConvo.participants[0].participant
@@ -149,7 +155,7 @@ const sendMessagePost = async (req, res) => {
 		});
 
 		// Deleting the old conversation and saving it
-		await Conversation.deleteOne({ _id: req.body.conversationID });
+		await Conversation.deleteOne({ id: req.body.conversationID });
 		await copyToSave.save();
 		res.sendStatus(202);
 	} catch (err) {
@@ -163,31 +169,3 @@ module.exports = {
 	fetchConversationGet,
 	sendMessagePost
 };
-
-// This function will later be used to push a specific conversation
-// to the top of our SidebarList when a user sends a message
-
-// Delete that specific conversation from our collection
-// await Conversation.deleteOne({
-// 	// Searching by Sender and Recipient's ID
-// 	$and: [
-// 		{ "participants.participant": req.user._id },
-// 		{ "participants.participant": recipient._id }
-// 	]
-// });
-
-// // Initializing the conversation that exists
-// // so we can save it to our DB
-// updatedConversation = new Conversation({
-// 	participants: [
-// 		{
-// 			participant: conversation.participants[0].participant
-// 		},
-// 		{
-// 			participant: conversation.participants[1].participant
-// 		}
-// 	]
-// });
-
-// // Saving to our DB
-// await updatedConversation.save();
