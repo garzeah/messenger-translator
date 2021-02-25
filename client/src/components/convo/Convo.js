@@ -17,20 +17,28 @@ const Conversation = ({ currConvo }) => {
 	useEffect(() => {
 		// If it exists...
 		if (currConvo.conversationID) {
+			console.log(currConvo);
 			const retrieveMessages = async () => {
 				// Fetching user data
 				let data = await fetch(
 					`/api/conversations/${currConvo.conversationID}`
 				);
 				data = await data.json();
+				console.log(data);
 				setCurrConvoMessages(data);
 			};
 			retrieveMessages();
 		}
-	}, [currConvo, currConvo.conversationID]);
+	}, [currConvo]);
 
 	const messagesCard = Object.keys(currConvoMessages).map((key, idx) => {
-		let { sender, content, timeCreated, _id } = currConvoMessages[key];
+		let {
+			conversationID,
+			sender,
+			content,
+			timeCreated,
+			_id
+		} = currConvoMessages[key];
 
 		// Keeps track of last message to auto scroll
 		let lastMessage = currConvoMessages.length - 1 === idx;
@@ -44,7 +52,10 @@ const Conversation = ({ currConvo }) => {
 		time.pop();
 		time = time.join(":");
 
-		// This is the person who sent the message (sender)
+		// Fixes issue of momentary gap in time where conversation ids don't match
+		if (currConvo.conversationID !== conversationID) return null;
+
+		// When you receive a message
 		if (sender === currConvo._id) {
 			return (
 				<div className="recipient" key={_id}>
@@ -60,8 +71,8 @@ const Conversation = ({ currConvo }) => {
 					</div>
 				</div>
 			);
-		} else {
-			// This is the person who receives the message (recipient)
+			// When you send a message
+		} else if (sender !== currConvo._id) {
 			return (
 				<div className="sender" key={_id}>
 					<div className="messageHeader">
