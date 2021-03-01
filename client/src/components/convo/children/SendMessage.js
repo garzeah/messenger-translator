@@ -24,7 +24,7 @@ const styles = {
 
 const StyledInput = withStyles(styles)(OutlinedInput);
 
-const SendMessage = ({ currConvo }) => {
+const SendMessage = ({ currConvo, setIsMessageSent }) => {
 	const [message, setMessage] = useState("");
 
 	// Sends the message to our server
@@ -43,7 +43,10 @@ const SendMessage = ({ currConvo }) => {
 			);
 
 			// Clear input and move convo to top of convoList
-			if (res.status === 202) setMessage("");
+			if (res.status === 202) {
+				setMessage("");
+				setIsMessageSent(true);
+			}
 		} catch (err) {
 			console.log(err);
 		}

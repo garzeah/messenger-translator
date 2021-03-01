@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
+const socketio = require("socket.io");
 const keys = require("./config/keys");
 require("dotenv").config();
 
@@ -17,8 +18,10 @@ mongoose.connect(keys.mongoURI, {
 	useFindAndModify: false
 });
 
-// Initializing express
+// Initializing express and our socket.io server
 const app = express();
+// Creates a new instance of io so we can configure server w/ sockets
+// const io = socketio(server);
 
 // Initializing Middlewares
 app.use(express.json());
@@ -41,8 +44,36 @@ if (process.env.NODE_ENV === "production") {
 	});
 }
 
-// Starting our server
+// All socket.io code will be run in this fn
+// since we're managing the socket that connected
+// io.on("connection", (socket) => {
+// 	console.log("A user has connected.");
+
+// 	// Join event
+// 	socket.on("join", (test) => {
+// 		console.log(test);
+// 	});
+
+// 	// Disconnect event
+// 	socket.on("disconnect", () => {
+// 		console.log("A user left.");
+// 	});
+// });
+
+// Initializing our express server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+const expressServer = app.listen(PORT, () => {
 	console.log(`Server has started on port ${PORT}`);
+});
+// Socket server is listening to our express server
+const io = socketio(expressServer);
+
+// Socket.io related code
+io.on("connection", (socket) => {
+	socket.on("messageToServer", ({ isMessageSent }) => {
+		// That means message was successfully sent, set it back to false
+		if (isMessageSent === true) {
+			io.emit("messageFromServer", { isMessageSent: false });
+		}
+	});
 });
