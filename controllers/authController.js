@@ -6,8 +6,7 @@ const maxAge = 7 * 24 * 60 * 60;
 // Handle errors
 const handleErrors = (err) => {
 	let errors = {
-		firstName: "",
-		lastName: "",
+		displayName: "",
 		email: "",
 		password: ""
 	};

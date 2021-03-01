@@ -23,9 +23,7 @@ const SidebarHeader = ({ user, setUser }) => {
 				<ChangeAvatar>
 					<DisplayAvatar user={user} width={6} height={6} />
 				</ChangeAvatar>
-				<h2 style={{ marginLeft: "15px" }}>
-					{user.firstName} {user.lastName}
-				</h2>
+				<h2 style={{ marginLeft: "15px" }}>{user.displayName}</h2>
 			</div>
 			<div className="sidebarHeaderUserSettings">
 				<Settings />

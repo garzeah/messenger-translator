@@ -25,14 +25,13 @@ const PreviewConvo = ({
 			setSearchInput("");
 
 			// Reformatting our data to avoid storing nested objects
-			const { _id, firstName, lastName, email, avatar } = user;
+			const { _id, displayName, email, avatar } = user;
 
 			// Sets the current conversation when clicking a user in search
 			setCurrConvo({
 				conversationID: data,
 				_id,
-				firstName,
-				lastName,
+				displayName,
 				email,
 				avatar
 			});
@@ -53,14 +52,14 @@ const PreviewConvo = ({
 	const userItemCard = (
 		<div className="previewConvo" onClick={clickHandler}>
 			<DisplayAvatar id={user._id} user={user} width={6} height={6} />
-			<p id="convoItemOwner">{`${user.firstName} ${user.lastName}`}</p>
+			<p id="convoItemOwner">{user.displayName}</p>
 		</div>
 	);
 
 	const convoItemCard = (
 		<div className={activeConvo()} onClick={() => setCurrConvo(user)}>
 			<DisplayAvatar id={user._id} user={user} width={6} height={6} />
-			<p id="convoItemOwner">{`${user.firstName} ${user.lastName}`}</p>
+			<p id="convoItemOwner">{user.displayName}</p>
 		</div>
 	);
 

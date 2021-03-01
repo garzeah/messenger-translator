@@ -36,7 +36,7 @@ const SidebarList = ({
 	let filteredUserList = Object.values(userList).reduce((filtered, user) => {
 		// Filtering out users by their email or name
 		if (
-			`${user.firstName} ${user.lastName}`.includes(searchInput) ||
+			user.displayName.includes(searchInput) ||
 			user.email.includes(searchInput)
 		) {
 			filtered.push(user);

@@ -23,13 +23,10 @@ const DisplayAvatar = ({ user, width, height }) => {
 		<img
 			className={classes.avatar}
 			src={`${window.location.origin}/api/users/avatar/${user._id}`}
-			alt={`${user.firstName} ${user.lastName}`}
+			alt={user.displayName}
 		/>
 	) : (
-		<Avatar
-			className={classes.avatar}
-			alt={`${user.firstName} ${user.lastName}`}
-		/>
+		<Avatar className={classes.avatar} alt={user.displayName} />
 	);
 
 	return <div>{avatarCard}</div>;

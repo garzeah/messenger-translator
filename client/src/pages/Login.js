@@ -127,8 +127,8 @@ const Login = () => {
 					</Button>
 				</Link>
 			</Box>
-			<Box mt={5} mx={6}>
-				<h2>Welcome back!</h2>
+			<Box mt={10} mx={6}>
+				<h2 id="loginHeader">Welcome back!</h2>
 				<Box mt={2}>
 					<TextField
 						label="Email"
@@ -152,7 +152,6 @@ const Login = () => {
 					<Button
 						className="messengerButton"
 						onClick={handleSubmit}
-						style={{ marginBottom: "30px" }}
 						size="large"
 						variant="contained"
 						color="primary"
@@ -185,7 +184,7 @@ const Login = () => {
 	return (
 		<div className="pageContainer">
 			<div className="sideContainer">
-				<img id="messengerIcon" src={messengerIcon} alt="Message Symbol"></img>
+				<img id="messengerIcon" src={messengerIcon} alt="Decipher Logo"></img>
 				<p id="sideText">Converse with anyone with any language</p>
 			</div>
 			{formContainer}

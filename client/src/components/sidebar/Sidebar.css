@@ -1,20 +1,19 @@
 /* Sidebar */
 .sidebar {
-	padding: 10px 5px;
-	margin-left: 10px;
-	width: 50vh;
+	background-color: #f5f7fb;
+	min-width: 30vw;
+	padding: 10px 20px;
 }
 
 #chatsText {
 	font-size: 25px;
-	margin-top: 10px;
+	margin-top: 35px;
 }
 
 /*  Sidebar Header */
 .sidebarHeader {
 	display: flex;
 	justify-content: space-between;
-	height: 7.5vh;
 }
 
 .sidebarHeaderUser {
@@ -36,14 +35,13 @@
 
 /* Sidebar User Search */
 .searchUser {
-	background: #e9eef9;
+	background: #e9eef8;
 	border-radius: 10px;
-	min-width: 300px;
 }
 
 /* Sidebar List */
 .sidebarList {
-	padding-right: 3px;
+	padding-right: 12px;
 	height: 73vh;
 	overflow-y: auto;
 }
@@ -51,24 +49,27 @@
 .activeConvo {
 	display: flex;
 	align-items: center;
-	padding: 5px 0;
-	padding-left: 5px;
-	background: lightgray;
+	background: #ffffff;
 	box-shadow: inset -1px 0 0 darken(lightgray, 10);
 	border-radius: 10px;
+	padding: 10px 0px 10px 5px;
+	margin: 10px 5px 10px 0;
+	filter: drop-shadow(0 0 0.03rem #c1cbd9);
 }
 
 .previewConvo {
 	display: flex;
 	align-items: center;
-	padding: 5px 0;
-	padding-left: 5px;
-	margin: 3px 0;
+	background: #f9fafc;
+	border-radius: 10px;
+	padding: 10px 0px 10px 5px;
+	margin: 10px 5px 10px 0;
+	filter: drop-shadow(0 0 0.03rem #c1cbd9);
 }
 
 .previewConvo:hover {
 	cursor: pointer;
-	background: lightgray;
+	background: white;
 	box-shadow: inset -1px 0 0 darken(lightgray, 10);
 	border-radius: 10px;
 }

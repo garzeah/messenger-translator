@@ -89,8 +89,7 @@ const fetchAllMyConversationsGet = async (req, res) => {
 			conversationList[i] = {
 				...conversationList[i],
 				_id: userData._id,
-				firstName: userData.firstName,
-				lastName: userData.lastName,
+				displayName: userData.displayName,
 				email: userData.email,
 				avatar: userData.avatar,
 				userID: undefined
