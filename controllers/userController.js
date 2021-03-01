@@ -26,6 +26,7 @@ const fetchMyProfileGet = async (req, res) => {
 // Update my profile
 const updateMyProfile = async (req, res) => {
 	try {
+		// Prevents users from submitting whitespace only
 		Object.values(req.body).forEach((value) => {
 			if (value.trim() === "") res.status(406).send();
 		});

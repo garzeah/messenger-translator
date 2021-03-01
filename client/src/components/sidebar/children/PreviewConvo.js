@@ -1,62 +1,70 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Avatar from "@material-ui/core/Avatar";
+
+import DisplayAvatar from "../../DisplayAvatar";
 import "../Sidebar.css";
 
-const useStyles = makeStyles((theme) => ({
-	root: {
-		display: "flex",
-		"& > *": {
-			margin: theme.spacing(1)
-		}
-	},
-	avatar: {
-		width: theme.spacing(6),
-		height: theme.spacing(6),
-		borderRadius: "50px"
-	}
-}));
-
-const PreviewItem = ({ type, id, avatar, name, email, setSearchInput }) => {
-	const classes = useStyles();
-
+const PreviewConvo = ({
+	type,
+	user,
+	setSearchInput,
+	currConvo,
+	setCurrConvo
+}) => {
 	const clickHandler = async () => {
 		// Will send a post request to initiate a conversation
 		try {
 			// Our data to send to the server
-			await fetch("/api/conversations/new", {
+			let data = await fetch("/api/conversations/new", {
 				method: "POST",
-				body: JSON.stringify({ email }),
+				body: JSON.stringify({ email: user.email }),
 				headers: { "Content-Type": "application/json" }
 			});
+			data = await data.json();
 
 			// Clear user input
 			setSearchInput("");
+
+			// Reformatting our data to avoid storing nested objects
+			const { _id, firstName, lastName, email, avatar } = user;
+
+			// Sets the current conversation when clicking a user in search
+			setCurrConvo({
+				conversationID: data,
+				_id,
+				firstName,
+				lastName,
+				email,
+				avatar
+			});
 		} catch (err) {
 			console.log(err);
 		}
 	};
 
-	// Displaying Avatar JSX
-	let avatarCard = avatar ? (
-		<img
-			className={classes.avatar}
-			src={`${window.location.origin}/api/users/avatar/${id}`}
-			alt={name}
-		/>
-	) : (
-		<Avatar className={classes.avatar} alt={name} />
-	);
+	// Highlights the active conversation
+	const activeConvo = () => {
+		if (currConvo) {
+			if (currConvo._id === user._id) return "activeConvo";
+		}
+		return "previewConvo";
+	};
 
-	return (
-		<div
-			className="previewItem"
-			onClick={type === "user" ? clickHandler : null}
-		>
-			{avatarCard}
-			<p style={{ marginLeft: "15px" }}>{name}</p>
+	// Creating 2 separate cards to avoid too many terneray operators
+	const userItemCard = (
+		<div className="previewConvo" onClick={clickHandler}>
+			<DisplayAvatar id={user._id} user={user} width={6} height={6} />
+			<p id="convoItemOwner">{`${user.firstName} ${user.lastName}`}</p>
 		</div>
 	);
+
+	const convoItemCard = (
+		<div className={activeConvo()} onClick={() => setCurrConvo(user)}>
+			<DisplayAvatar id={user._id} user={user} width={6} height={6} />
+			<p id="convoItemOwner">{`${user.firstName} ${user.lastName}`}</p>
+		</div>
+	);
+
+	return <div>{type === "user" ? userItemCard : convoItemCard}</div>;
 };
 
-export default PreviewItem;
+export default PreviewConvo;

@@ -1,22 +1,20 @@
 /* Sidebar */
 .sidebar {
-	margin: 10px 20px;
-	width: 40%;
-}
-
-.sidebar h2 {
-	font-size: 17px;
+	padding: 10px 5px;
+	margin-left: 10px;
+	width: 50vh;
 }
 
 #chatsText {
 	font-size: 25px;
+	margin-top: 10px;
 }
 
 /*  Sidebar Header */
 .sidebarHeader {
 	display: flex;
 	justify-content: space-between;
-	margin-bottom: 30px;
+	height: 7.5vh;
 }
 
 .sidebarHeaderUser {
@@ -44,18 +42,39 @@
 }
 
 /* Sidebar List */
-.previewItem {
+.sidebarList {
+	padding-right: 3px;
+	height: 73vh;
+	overflow-y: auto;
+}
+
+.activeConvo {
 	display: flex;
 	align-items: center;
 	padding: 5px 0;
 	padding-left: 5px;
+	background: lightgray;
+	box-shadow: inset -1px 0 0 darken(lightgray, 10);
+	border-radius: 10px;
 }
 
-.previewItem:hover {
+.previewConvo {
+	display: flex;
+	align-items: center;
+	padding: 5px 0;
+	padding-left: 5px;
+	margin: 3px 0;
+}
+
+.previewConvo:hover {
 	cursor: pointer;
 	background: lightgray;
 	box-shadow: inset -1px 0 0 darken(lightgray, 10);
 	border-radius: 10px;
+}
+
+#convoItemOwner {
+	margin-left: 15px;
 }
 
 /* Sidebar Modal */
