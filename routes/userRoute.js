@@ -24,17 +24,20 @@ router.get("/api/users", verifyToken, userController.fetchAllProfilesGet);
 // Retrieve your own profile
 router.get("/api/users/me", verifyToken, userController.fetchMyProfileGet);
 
+// Update your own profile
+router.post("/api/users/me", verifyToken, userController.updateMyProfile);
+
 // Upload Avatar
 router.post(
 	"/api/users/me/avatar",
 	verifyToken,
-	upload.single("avatar"),
+	upload.single("avatars"),
 	userController.uploadAvatarPost
 );
 
 // Fetch Avatar
 router.get(
-	"/api/users/:id/avatar",
+	"/api/users/avatar/:id",
 	verifyToken,
 	userController.fetchMyAvatarGet
 );

@@ -7,11 +7,13 @@ const userSchema = new mongoose.Schema({
 	firstName: {
 		type: String,
 		required: [true, "Please enter your first name"],
+		lowercase: true,
 		trim: true
 	},
 	lastName: {
 		type: String,
 		required: [true, "Please enter your last name"],
+		lowercase: true,
 		trim: true
 	},
 	email: {
@@ -39,7 +41,6 @@ userSchema.methods.toJSON = function () {
 
 	// Removing unnecessary information for the user to have
 	delete userObject.password;
-	delete userObject.avatar;
 
 	return userObject;
 };
@@ -74,9 +75,6 @@ userSchema.pre("save", async function (next, err) {
 
 	next();
 });
-
-// Adds an error message if we try to save over a unique value
-// userSchema.plugin(uniqueValidator);
 
 const User = mongoose.model("users", userSchema);
 module.exports = User;

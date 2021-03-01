@@ -1,0 +1,92 @@
+/* Sidebar */
+.sidebar {
+	margin: 10px 20px;
+	width: 40%;
+}
+
+.sidebar h2 {
+	font-size: 17px;
+}
+
+#chatsText {
+	font-size: 25px;
+}
+
+/*  Sidebar Header */
+.sidebarHeader {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 30px;
+}
+
+.sidebarHeaderUser {
+	display: flex;
+	align-items: center;
+}
+
+.sidebarHeaderUserSettings {
+	display: flex;
+	align-items: center;
+}
+
+.sidebarHeaderUserSettings:hover {
+	cursor: pointer;
+	-webkit-transform: scale(1.2);
+	-ms-transform: scale(1.2);
+	transform: scale(1.2);
+}
+
+/* Sidebar User Search */
+.searchUser {
+	background: #e9eef9;
+	border-radius: 10px;
+	min-width: 300px;
+}
+
+/* Sidebar List */
+.previewItem {
+	display: flex;
+	align-items: center;
+	padding: 5px 0;
+	padding-left: 5px;
+}
+
+.previewItem:hover {
+	cursor: pointer;
+	background: lightgray;
+	box-shadow: inset -1px 0 0 darken(lightgray, 10);
+	border-radius: 10px;
+}
+
+/* Sidebar Modal */
+.modalHeader {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 15px;
+}
+
+.modalExit:hover {
+	cursor: pointer;
+	-webkit-transform: scale(1.2);
+	-ms-transform: scale(1.2);
+	transform: scale(1.2);
+}
+
+/* Sidebar Change Avatar Modal */
+.modalAvatarBodyNoInput {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.modalAvatar:hover {
+	cursor: pointer;
+	-webkit-transform: scale(1.1);
+	-ms-transform: scale(1.1);
+	transform: scale(1.1);
+}
+
+.previewAvatar {
+	display: flex;
+	align-items: center;
+}
