@@ -89,7 +89,11 @@ const Conversation = ({ currConvo, isMessageSent, setIsMessageSent }) => {
 		<div className="convoContainer">
 			<ConvoHeader currConvo={currConvo} />
 			<div className="convoBody">{messagesCard}</div>
-			<SendMessage currConvo={currConvo} setIsMessageSent={setIsMessageSent} />
+			<SendMessage
+				currConvo={currConvo}
+				isMessageSent={isMessageSent}
+				setIsMessageSent={setIsMessageSent}
+			/>
 		</div>
 	);
 };

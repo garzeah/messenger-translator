@@ -23,11 +23,15 @@ const Messenger = () => {
 	// Keeps track of your current conversation
 	const [currConvo, setCurrConvo] = useState(null);
 	// Keeps track of whether message was successfully sent
-	const [isMessageSent, setIsMessageSent] = useState(false);
+	const [isMessageSent, setIsMessageSent] = useState({ status: false });
 
-	// Initializing our endpoint to send socket.io data to
-	// const ENDPOINT_dev = "localhost:5000";
-	const ENDPOINT_prod = "https://decipher-io.herokuapp.com/";
+	// Initializing our endpoint based on dev or prod server
+	let ENDPOINT;
+	if (process.env.NODE_ENV === "production") {
+		ENDPOINT = "https://decipher-io.herokuapp.com/";
+	} else {
+		ENDPOINT = "localhost:5000";
+	}
 
 	// Will be used to redirect user
 	const history = useHistory();
@@ -45,28 +49,28 @@ const Messenger = () => {
 		};
 
 		loginCheck();
+	}, [history]);
 
+	// Handles all the socket.io related code
+	useEffect(() => {
 		// Connecting to our endpoint and creating an event
-		socket = io(ENDPOINT_prod, connectionOptions);
+		socket = io(ENDPOINT, connectionOptions);
 
 		// If message has been successfully sent...
-		if (isMessageSent === true) {
-			socket.emit("messageToServer", { isMessageSent });
+		if (isMessageSent.status) {
+			socket.emit("messageToServer", isMessageSent.status);
 		}
 
 		// Now that the server has acknowledged message has beent sent
-		// we will set it back to false and reredner everything
-		socket.on("messageFromServer", ({ isMessageSent }) => {
-			if (isMessageSent === false) setIsMessageSent(false);
+		// we will set set it true for everyone
+		socket.on("messageFromServer", (status) => {
+			// Triggering a re-render since message was successful
+			setIsMessageSent({ status: status });
 		});
 
-		console.log(process.env.NODE_ENV);
-
-		// Clean up function, disconnect event
-		return () => {
-			socket.disconnect();
-		};
-	}, [history, ENDPOINT_prod, isMessageSent]);
+		// Setting it back to default in the event of a new message
+		setIsMessageSent({ status: false });
+	}, [ENDPOINT, isMessageSent.status]);
 
 	return (
 		<div className="messenger">
@@ -81,8 +85,8 @@ const Messenger = () => {
 				<Convo
 					currConvo={currConvo}
 					user={user}
-					setIsMessageSent={setIsMessageSent}
 					isMessageSent={isMessageSent}
+					setIsMessageSent={setIsMessageSent}
 				/>
 			) : null}
 		</div>

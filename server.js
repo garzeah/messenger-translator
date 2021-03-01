@@ -44,22 +44,6 @@ if (process.env.NODE_ENV === "production") {
 	});
 }
 
-// All socket.io code will be run in this fn
-// since we're managing the socket that connected
-// io.on("connection", (socket) => {
-// 	console.log("A user has connected.");
-
-// 	// Join event
-// 	socket.on("join", (test) => {
-// 		console.log(test);
-// 	});
-
-// 	// Disconnect event
-// 	socket.on("disconnect", () => {
-// 		console.log("A user left.");
-// 	});
-// });
-
 // Initializing our express server
 const PORT = process.env.PORT || 5000;
 const expressServer = app.listen(PORT, () => {
@@ -70,10 +54,10 @@ const io = socketio(expressServer);
 
 // Socket.io related code
 io.on("connection", (socket) => {
-	socket.on("messageToServer", ({ isMessageSent }) => {
+	socket.on("messageToServer", (status) => {
 		// That means message was successfully sent, set it back to false
-		if (isMessageSent === true) {
-			io.emit("messageFromServer", { isMessageSent: false });
+		if (status) {
+			io.emit("messageFromServer", { render: true });
 		}
 	});
 });

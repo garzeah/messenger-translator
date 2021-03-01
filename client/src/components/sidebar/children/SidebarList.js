@@ -49,7 +49,7 @@ const SidebarList = ({
 	}, []);
 
 	// List of users to add
-	let userListCard = Object.keys(filteredUserList).map((key) => {
+	const userListCard = Object.keys(filteredUserList).map((key) => {
 		return (
 			<PreviewConvo
 				type="user"
@@ -63,7 +63,7 @@ const SidebarList = ({
 	});
 
 	// List of conversations a user has
-	let convoListCard = Object.keys(convoList).map((_, idx, convos) => {
+	const convoListCard = Object.keys(convoList).map((_, idx, convos) => {
 		// Wrote it in this manner so we can reverse the array
 		// while returning each appropriate convo in O(n)
 		let key = convos[convoList.length - 1 - idx];

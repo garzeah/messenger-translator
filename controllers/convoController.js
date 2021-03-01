@@ -95,7 +95,7 @@ const fetchAllMyConversationsGet = async (req, res) => {
 				displayName: userData.displayName,
 				email: userData.email,
 				avatar: userData.avatar,
-				userID: undefined
+				userID: null
 			};
 		}
 	}
@@ -115,15 +115,17 @@ const fetchConversationGet = async (req, res) => {
 
 // Send message
 const sendMessagePost = async (req, res) => {
+	let messageText = req.body.message.trim();
+
 	try {
 		// If our message is empty then
-		if (!req.body.message.trim()) return res.sendStatus(406);
+		if (!messageText) return res.sendStatus(406);
 
 		// Otherwise, message is not empty to let's save it
 		const newMessage = new Message({
 			conversationID: req.body.conversationID,
 			sender: req.user._id,
-			content: req.body.message.trim(),
+			content: messageText,
 			timeCreated: new Date()
 		});
 

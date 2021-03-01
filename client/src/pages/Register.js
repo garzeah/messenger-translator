@@ -12,8 +12,9 @@ function Alert(props) {
 }
 
 const Register = () => {
-	// State management for input and snackbars
+	// State management for input, valid input and snackbars
 	const [inputValues, setInputValues] = useState({});
+	const [validInput, setValidInput] = useState({});
 	const [snackbar, setSnackbar] = useState({ open: false });
 
 	// Will be used to redirect user
@@ -32,6 +33,26 @@ const Register = () => {
 		};
 		loginCheck();
 	}, [history]);
+
+	// Error handling
+	useEffect(() => {
+		// Checks for valid email
+		if (inputValues.email) {
+			setValidInput((validInput) => ({
+				...validInput,
+				email: !EmailValidator.validate(inputValues.email)
+			}));
+		}
+
+		// Checks for valid password
+		if (inputValues.password) {
+			setValidInput((validInput) => ({
+				...validInput,
+				password:
+					inputValues.password.length > 0 && inputValues.password.length < 6
+			}));
+		}
+	}, [inputValues.email, inputValues.password]);
 
 	// Stores data in our input state
 	const handleChange = (e) => {
@@ -127,18 +148,6 @@ const Register = () => {
 		</div>
 	);
 
-	// Error handling for password (6 chars minimum) for material-ui
-	let validEmail, validPassword;
-
-	if (inputValues.email) {
-		validEmail = !EmailValidator.validate(inputValues.email);
-	}
-
-	if (inputValues.password || inputValues.confirmPassword) {
-		validPassword =
-			inputValues.password.length > 0 && inputValues.password.length < 6;
-	}
-
 	// JSX pertaining to our form
 	const formContainer = (
 		<div className="formContainer">
@@ -171,8 +180,8 @@ const Register = () => {
 						name="email"
 						onChange={(e) => handleChange(e)}
 						onKeyPress={handleKeyPress}
-						error={validEmail}
-						helperText={validEmail ? "Enter a valid email address" : ""}
+						error={validInput.email}
+						helperText={validInput.email ? "Enter a valid email address" : ""}
 						fullWidth
 					/>
 				</Box>
@@ -183,9 +192,11 @@ const Register = () => {
 						type="password"
 						onChange={(e) => handleChange(e)}
 						onKeyPress={handleKeyPress}
-						error={validPassword}
+						error={validInput.password}
 						helperText={
-							validPassword ? "Passwords must be at least 6 characters" : ""
+							validInput.password
+								? "Passwords must be at least 6 characters"
+								: ""
 						}
 						fullWidth
 					/>

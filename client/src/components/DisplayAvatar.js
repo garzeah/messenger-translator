@@ -22,7 +22,7 @@ const DisplayAvatar = ({ user, width, height }) => {
 	let avatarCard = user.avatar ? (
 		<img
 			className={classes.avatar}
-			src={`${window.location.origin}/api/users/avatar/${user._id}`}
+			src={`/api/users/avatar/${user._id}`}
 			alt={user.displayName}
 		/>
 	) : (
