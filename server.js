@@ -54,10 +54,9 @@ const io = socketio(expressServer);
 
 // Socket.io related code
 io.on("connection", (socket) => {
-	socket.on("messageToServer", (status) => {
-		// That means message was successfully sent, set it back to false
-		if (status) {
-			io.emit("messageFromServer", { render: true });
-		}
+	socket.on("messageToServer", (msg) => {
+		console.log(msg);
 	});
+
+	socket.emit("messageFromServer", "Hello from server!");
 });

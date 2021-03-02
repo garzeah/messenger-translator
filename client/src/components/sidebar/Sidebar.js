@@ -5,7 +5,7 @@ import SidebarList from "./children/SidebarList";
 import SearchUser from "./children/SearchUser";
 import "./Sidebar.css";
 
-const Sidebar = ({ currConvo, setCurrConvo, user, setUser, isMessageSent }) => {
+const Sidebar = ({ currConvo, setCurrConvo, user, setUser }) => {
 	// Keeps track of a user's search input
 	const [searchInput, setSearchInput] = useState("");
 
@@ -31,7 +31,6 @@ const Sidebar = ({ currConvo, setCurrConvo, user, setUser, isMessageSent }) => {
 						route="/api/conversations/me"
 						currConvo={currConvo}
 						setCurrConvo={setCurrConvo}
-						isMessageSent={isMessageSent}
 					/>
 				)
 			}

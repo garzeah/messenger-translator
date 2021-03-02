@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import io from "socket.io-client";
 
@@ -14,24 +14,20 @@ const connectionOptions = {
 	transports: ["websocket"]
 };
 
-// Initializing our socket, put outside bc of rerender issues
-let socket;
+// Initializing our socket based on dev or prod server
+let SOCKET_SERVER_URL;
+if (process.env.NODE_ENV === "production") {
+	SOCKET_SERVER_URL = "https://decipher-io.herokuapp.com/";
+} else {
+	SOCKET_SERVER_URL = "http://localhost:5000/";
+}
 
 const Messenger = () => {
 	// Your profile information
 	const [user, setUser] = useState({});
 	// Keeps track of your current conversation
 	const [currConvo, setCurrConvo] = useState(null);
-	// Keeps track of whether message was successfully sent
-	const [isMessageSent, setIsMessageSent] = useState({ status: false });
-
-	// Initializing our endpoint based on dev or prod server
-	let ENDPOINT;
-	if (process.env.NODE_ENV === "production") {
-		ENDPOINT = "https://decipher-io.herokuapp.com/";
-	} else {
-		ENDPOINT = "localhost:5000";
-	}
+	const socketRef = useRef();
 
 	// Will be used to redirect user
 	const history = useHistory();
@@ -53,24 +49,14 @@ const Messenger = () => {
 
 	// Handles all the socket.io related code
 	useEffect(() => {
-		// Connecting to our endpoint and creating an event
-		socket = io(ENDPOINT, connectionOptions);
+		// Connecting to our SOCKET_SERVER_URL and creating an event
+		socketRef.current = io(SOCKET_SERVER_URL, connectionOptions);
 
-		// If message has been successfully sent...
-		if (isMessageSent.status) {
-			socket.emit("messageToServer", isMessageSent.status);
-		}
-
-		// Now that the server has acknowledged message has beent sent
-		// we will set set it true for everyone
-		socket.on("messageFromServer", (status) => {
-			// Triggering a re-render since message was successful
-			setIsMessageSent({ status: status });
+		socketRef.current.emit("messageToServer", "Hello from client!");
+		socketRef.current.on("messageFromServer", (msg) => {
+			console.log(msg);
 		});
-
-		// Setting it back to default in the event of a new message
-		setIsMessageSent({ status: false });
-	}, [ENDPOINT, isMessageSent.status]);
+	}, []);
 
 	return (
 		<div className="messenger">
@@ -79,16 +65,8 @@ const Messenger = () => {
 				setCurrConvo={setCurrConvo}
 				user={user}
 				setUser={setUser}
-				isMessageSent={isMessageSent}
 			/>
-			{currConvo ? (
-				<Convo
-					currConvo={currConvo}
-					user={user}
-					isMessageSent={isMessageSent}
-					setIsMessageSent={setIsMessageSent}
-				/>
-			) : null}
+			{currConvo ? <Convo currConvo={currConvo} user={user} /> : null}
 		</div>
 	);
 };
