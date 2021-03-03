@@ -56,6 +56,11 @@ const Messenger = () => {
 				...isMessageSent,
 				status: false
 			}));
+
+			// Clean up function
+			return () => {
+				socket.disconnect();
+			};
 		});
 	}, []);
 
