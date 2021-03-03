@@ -72,4 +72,4 @@ async function listLanguages() {
 	languages.forEach((language) => console.log(language));
 }
 
-listLanguages();
+// listLanguages();
