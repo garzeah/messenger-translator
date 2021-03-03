@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const socketio = require("socket.io");
-const keys = require("./config/keys");
+const { Translate } = require("@google-cloud/translate").v2;
 require("dotenv").config();
 
 // Routes
@@ -11,7 +11,7 @@ const userRouter = require("./routes/userRoute");
 const convoRouter = require("./routes/convoRoute");
 
 // Connecting to remote Mongo database
-mongoose.connect(keys.mongoURI, {
+mongoose.connect(process.env.MONGO_URI, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
 	useCreateIndex: true,
@@ -60,3 +60,16 @@ io.on("connection", (socket) => {
 		io.emit("messageFromServer", status);
 	});
 });
+
+// Creates a client
+const translate = new Translate();
+
+async function listLanguages() {
+	// Lists available translation language with their names in English (the default).
+	const [languages] = await translate.getLanguages();
+
+	console.log("Languages:");
+	languages.forEach((language) => console.log(language));
+}
+
+listLanguages();
