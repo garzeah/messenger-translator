@@ -4,7 +4,7 @@ import DisplayAvatar from "../DisplayAvatar";
 import ConvoHeader from "./children/ConvoHeader";
 import SendMessage from "./children/SendMessage";
 
-const Conversation = ({ currConvo }) => {
+const Conversation = ({ currConvo, isMessageSent }) => {
 	// Stores messages
 	const [currConvoMessages, setCurrConvoMessages] = useState({});
 
@@ -27,7 +27,7 @@ const Conversation = ({ currConvo }) => {
 			};
 			retrieveMessages();
 		}
-	}, [currConvo]);
+	}, [currConvo, isMessageSent]);
 
 	const messagesCard = Object.keys(currConvoMessages).map((key, idx) => {
 		let {

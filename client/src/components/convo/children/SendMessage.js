@@ -1,7 +1,16 @@
 import React, { useState } from "react";
 import { FormControl, OutlinedInput, withStyles } from "@material-ui/core";
+import io from "socket.io-client";
 
 import "../Convo.css";
+import {
+	connectionOptions,
+	socketServerURL
+} from "../../../utilities/socketConfiguration.js";
+
+// Initializing our socket based on dev or prod server
+let socket,
+	SOCKET_SERVER_URL = socketServerURL();
 
 const styles = {
 	root: {
@@ -42,9 +51,13 @@ const SendMessage = ({ currConvo }) => {
 				}
 			);
 
-			// Clear input and move convo to top of convoList
+			// Clearing input and telling server it was successful
 			if (res.status === 202) {
 				setMessage("");
+
+				// Connecting to our SOCKET_SERVER_URL and creating an event
+				socket = io(SOCKET_SERVER_URL, connectionOptions);
+				socket.emit("messageToServer", true);
 			}
 		} catch (err) {
 			console.log(err);
