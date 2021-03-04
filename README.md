@@ -8,7 +8,7 @@
   <h3 align="center">Decipher</h3>
 
   <p align="center">
-    Helps people overcome language barriers.
+    Overcoming language barriers one message at a time.
   </p>
 </p>
 
@@ -16,7 +16,7 @@
 
 ## About The Project
 
-Decipher allows users to chat in different languages and overcome language barriers!
+A real-time messaging application that allows users to converse with anyone in any language.
 
 ### Built With
 
@@ -24,6 +24,8 @@ Decipher allows users to chat in different languages and overcome language barri
 - Node
 - Express
 - Mongo
+- Socket.io
+- Google Translate API
 
 ### Installation
 
@@ -35,20 +37,16 @@ Decipher allows users to chat in different languages and overcome language barri
    ```sh
    npm install
    ```
-3. Create a config folder and .env file in the server directory
-4. Create a dev.js file in the config folder
-5. Paste the following template in the keys.js file
+3. Create a .env file in the root directory
+4. Paste the following template in the keys.js file
    ```sh
-   module.exports = {
-      mongoURI: "",
+      ACCESS_TOKEN_SECRET=
+      MONGO_URI=
+      GOOGLE_APPLICATION_CREDENTIALS=
    };
    ```
-6. Enter your MongoURI (can get one from MongoDB Atlas)
-7. Paste the following template in the .env file
-   ```sh
-   ACCESS_TOKEN_SECRET=myToken
-   ```
-8. Start the server
+5. ACCESS_TOKEN_SECRET can be any string you want. MONGO_URI can be generated on MongoAtlas. Lastly, GOOGLE_APPLICATION_CREDENTIALS can be created when you sign up for the Google Translate API.
+6. Start the server
    ```sh
    npm start
    ```
