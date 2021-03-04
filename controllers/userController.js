@@ -1,6 +1,9 @@
 const sharp = require("sharp");
 const bcrypt = require("bcryptjs");
 const { Translate } = require("@google-cloud/translate").v2;
+const GOOGLE_APPLICATION_CREDENTIALS = JSON.parse(
+	process.env.GOOGLE_APPLICATION_CREDENTIALS
+);
 
 const User = require("../models/User");
 
@@ -82,7 +85,10 @@ const fetchMyAvatarGet = async (req, res) => {
 const fetchLanguages = async (req, res) => {
 	try {
 		// Creates a client
-		const translate = new Translate();
+		const translate = new Translate({
+			credentials: GOOGLE_APPLICATION_CREDENTIALS,
+			projectId: GOOGLE_APPLICATION_CREDENTIALS.project_id
+		});
 		// Lists available translation language with their names in English (the default).
 		const [languages] = await translate.getLanguages();
 		console.log(languages);

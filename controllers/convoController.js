@@ -1,5 +1,8 @@
 const cryptoRandomString = require("crypto-random-string");
 const { Translate } = require("@google-cloud/translate").v2;
+const GOOGLE_APPLICATION_CREDENTIALS = JSON.parse(
+	process.env.GOOGLE_APPLICATION_CREDENTIALS
+);
 
 const User = require("../models/User");
 const Conversation = require("../models/Conversation");
@@ -115,7 +118,10 @@ const fetchConversationGet = async (req, res) => {
 			res.send(conversation);
 		} else {
 			// If the user wants the translated version
-			const translate = new Translate();
+			const translate = new Translate({
+				credentials: GOOGLE_APPLICATION_CREDENTIALS,
+				projectId: GOOGLE_APPLICATION_CREDENTIALS.project_id
+			});
 
 			// Translation
 			for (let i = 0; i < conversation.length; i++) {
