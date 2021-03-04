@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
-import { Button, TextField, Box, Snackbar } from "@material-ui/core";
+import {
+	Button,
+	TextField,
+	Box,
+	Snackbar,
+	FormControl,
+	InputLabel,
+	Select
+} from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import * as EmailValidator from "email-validator";
 
@@ -12,8 +20,9 @@ function Alert(props) {
 }
 
 const Register = () => {
-	// State management for input, valid input and snackbars
+	// State management for input, languages, valid input and snackbars
 	const [inputValues, setInputValues] = useState({});
+	const [languageList, setLanguageList] = useState([]);
 	const [validInput, setValidInput] = useState({});
 	const [snackbar, setSnackbar] = useState({ open: false });
 
@@ -33,6 +42,17 @@ const Register = () => {
 		};
 		loginCheck();
 	}, [history]);
+
+	// Retrieving languages to display in our form
+	useEffect(() => {
+		const fetchLanguages = async () => {
+			// Checking to see if user is logged in
+			let languages = await fetch("/api/users/languages");
+			languages = await languages.json();
+			setLanguageList(languages);
+		};
+		fetchLanguages();
+	}, []);
 
 	// Error handling
 	useEffect(() => {
@@ -83,6 +103,16 @@ const Register = () => {
 				});
 				return;
 			}
+		}
+
+		// Language selection validator
+		if (!inputValues.language) {
+			setSnackbar({
+				open: true,
+				severity: "error",
+				message: "Please select a language"
+			});
+			return;
 		}
 
 		try {
@@ -148,6 +178,15 @@ const Register = () => {
 		</div>
 	);
 
+	// JSX for rendering a list of languages
+	const languageListCard = Object.keys(languageList).map((key) => {
+		return (
+			<option key={languageList[key].code} value={languageList[key].code}>
+				{languageList[key].name}
+			</option>
+		);
+	});
+
 	// JSX pertaining to our form
 	const formContainer = (
 		<div className="formContainer">
@@ -185,7 +224,7 @@ const Register = () => {
 						fullWidth
 					/>
 				</Box>
-				<Box mt={2} mb={4}>
+				<Box mt={2}>
 					<TextField
 						label="Password"
 						name="password"
@@ -200,6 +239,15 @@ const Register = () => {
 						}
 						fullWidth
 					/>
+				</Box>
+				<Box mt={2} mb={4}>
+					<FormControl fullWidth>
+						<InputLabel>Select primary language</InputLabel>
+						<Select name="language" onChange={(e) => handleChange(e)} native>
+							<option value="" />
+							{languageListCard}
+						</Select>
+					</FormControl>
 				</Box>
 				<div className="authButton">
 					<Button

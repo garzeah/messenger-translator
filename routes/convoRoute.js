@@ -20,7 +20,7 @@ router.get(
 
 // Get a specific conversation and its messages
 router.get(
-	"/api/conversations/:id",
+	"/api/conversations",
 	verifyToken,
 	convoController.fetchConversationGet
 );

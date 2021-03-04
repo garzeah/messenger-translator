@@ -4,9 +4,10 @@ import DisplayAvatar from "../DisplayAvatar";
 import ConvoHeader from "./children/ConvoHeader";
 import SendMessage from "./children/SendMessage";
 
-const Conversation = ({ currConvo, isMessageSent }) => {
-	// Stores messages
+const Conversation = ({ user, currConvo, isMessageSent }) => {
+	// States for retrieving messages and whether to translate or not
 	const [currConvoMessages, setCurrConvoMessages] = useState({});
+	const [originalLang, setOriginalLang] = useState(false);
 
 	// Will scroll us to the bottom of a conversation
 	const setRef = useCallback((node) => {
@@ -20,14 +21,16 @@ const Conversation = ({ currConvo, isMessageSent }) => {
 			const retrieveMessages = async () => {
 				// Fetching user data
 				let data = await fetch(
-					`/api/conversations/${currConvo.conversationID}`
+					`/api/conversations/?id=${currConvo.conversationID}&lang=${
+						originalLang ? "" : user.language
+					}`
 				);
 				data = await data.json();
 				setCurrConvoMessages(data);
 			};
 			retrieveMessages();
 		}
-	}, [currConvo, isMessageSent]);
+	}, [currConvo, isMessageSent, originalLang, user]);
 
 	const messagesCard = Object.keys(currConvoMessages).map((key, idx) => {
 		let {
@@ -87,7 +90,7 @@ const Conversation = ({ currConvo, isMessageSent }) => {
 
 	return (
 		<div className="convoContainer">
-			<ConvoHeader currConvo={currConvo} />
+			<ConvoHeader currConvo={currConvo} setOriginalLang={setOriginalLang} />
 			<div className="convoBody">{messagesCard}</div>
 			<SendMessage currConvo={currConvo} />
 		</div>

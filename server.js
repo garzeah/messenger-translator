@@ -2,7 +2,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const socketio = require("socket.io");
-const { Translate } = require("@google-cloud/translate").v2;
 require("dotenv").config();
 
 // Routes
@@ -60,16 +59,3 @@ io.on("connection", (socket) => {
 		io.emit("messageFromServer", status);
 	});
 });
-
-// Creates a client
-const translate = new Translate();
-
-async function listLanguages() {
-	// Lists available translation language with their names in English (the default).
-	const [languages] = await translate.getLanguages();
-
-	console.log("Languages:");
-	languages.forEach((language) => console.log(language));
-}
-
-// listLanguages();

@@ -75,8 +75,8 @@ const Messenger = () => {
 			/>
 			{currConvo ? (
 				<Convo
-					currConvo={currConvo}
 					user={user}
+					currConvo={currConvo}
 					isMessageSent={isMessageSent.status}
 				/>
 			) : null}

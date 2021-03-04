@@ -1,4 +1,5 @@
 const cryptoRandomString = require("crypto-random-string");
+const { Translate } = require("@google-cloud/translate").v2;
 
 const User = require("../models/User");
 const Conversation = require("../models/Conversation");
@@ -104,10 +105,33 @@ const fetchAllMyConversationsGet = async (req, res) => {
 
 // Get a specific conversation and its messages
 const fetchConversationGet = async (req, res) => {
+	const { id, lang } = req.query;
+
 	try {
 		// Finding all messages associated with a specific conversation
-		const conversation = await Message.find({ conversationID: req.params.id });
-		res.send(conversation);
+		let conversation = await Message.find({ conversationID: id });
+		// If the user wants to see the original language
+		if (!lang) {
+			res.send(conversation);
+		} else {
+			// If the user wants the translated version
+			const translate = new Translate();
+
+			// Translation
+			for (let i = 0; i < conversation.length; i++) {
+				// Translating each message that is not ours
+				if (req.user._id === conversation[i].sender) break;
+				let [translations] = await translate.translate(
+					conversation[i].content,
+					lang
+				);
+
+				// Replacing text with translations
+				conversation[i].content = translations;
+			}
+
+			res.send(conversation);
+		}
 	} catch (err) {
 		res.sendStatus(404);
 	}

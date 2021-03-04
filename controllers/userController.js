@@ -1,5 +1,6 @@
 const sharp = require("sharp");
 const bcrypt = require("bcryptjs");
+const { Translate } = require("@google-cloud/translate").v2;
 
 const User = require("../models/User");
 
@@ -77,10 +78,26 @@ const fetchMyAvatarGet = async (req, res) => {
 	}
 };
 
+// Fetches possible languages that can be used for translating
+const fetchLanguages = async (req, res) => {
+	try {
+		// Creates a client
+		const translate = new Translate();
+		// Lists available translation language with their names in English (the default).
+		const [languages] = await translate.getLanguages();
+		console.log(languages);
+
+		res.status(200).send(languages);
+	} catch (error) {
+		res.sendStatus(404);
+	}
+};
+
 module.exports = {
 	fetchAllProfilesGet,
 	fetchMyProfileGet,
 	updateMyProfile,
 	uploadAvatarPost,
-	fetchMyAvatarGet
+	fetchMyAvatarGet,
+	fetchLanguages
 };
