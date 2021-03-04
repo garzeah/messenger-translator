@@ -48,7 +48,7 @@ const Settings = () => {
 
 			// Redirect them to messenger page
 			if (res.status === 200) {
-				history.push("/login");
+				history.push("/");
 			}
 		} catch (err) {
 			console.log(err);
