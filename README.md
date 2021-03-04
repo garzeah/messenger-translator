@@ -43,7 +43,6 @@ A real-time messaging application that allows users to converse with anyone in a
       ACCESS_TOKEN_SECRET=
       MONGO_URI=
       GOOGLE_APPLICATION_CREDENTIALS=
-   };
    ```
 5. ACCESS_TOKEN_SECRET can be any string you want. MONGO_URI can be generated on MongoAtlas. Lastly, GOOGLE_APPLICATION_CREDENTIALS can be created when you sign up for the Google Translate API.
 6. Start the server
