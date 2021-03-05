@@ -88,7 +88,12 @@
 }
 
 /* Modals */
-.modalHeader {
+.modalHeaderAvatar {
+	display: flex;
+	justify-content: space-between;
+}
+
+.modalHeaderProfile {
 	display: flex;
 	justify-content: flex-end;
 }
