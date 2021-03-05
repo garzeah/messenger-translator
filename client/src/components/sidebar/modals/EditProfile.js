@@ -1,48 +1,30 @@
 import React, { useState, useEffect } from "react";
-import { Link, useHistory } from "react-router-dom";
+import * as EmailValidator from "email-validator";
+import MuiAlert from "@material-ui/lab/Alert";
 import {
-	Button,
 	TextField,
 	Box,
-	Snackbar,
 	FormControl,
 	InputLabel,
 	Select,
-	MenuItem
+	MenuItem,
+	Button,
+	Snackbar
 } from "@material-ui/core";
-import MuiAlert from "@material-ui/lab/Alert";
-import * as EmailValidator from "email-validator";
-
-import messengerIcon from "../assets/images/message.png";
-import "./RegisterLogin.css";
 
 function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-const Register = () => {
-	// State management for input, languages, valid input and snackbars
-	const [inputValues, setInputValues] = useState({});
-	const [languageList, setLanguageList] = useState([]);
+const EditProfile = ({ user }) => {
+	const [inputValues, setInputValues] = useState({
+		displayName: user.displayName,
+		email: user.email,
+		language: user.language
+	});
 	const [validInput, setValidInput] = useState({});
+	const [languageList, setLanguageList] = useState([]);
 	const [snackbar, setSnackbar] = useState({ open: false });
-
-	// Will be used to redirect user
-	const history = useHistory();
-
-	// Retrieves user information
-	useEffect(() => {
-		const loginCheck = async () => {
-			// Checking to see if user is logged in
-			const isLoggedIn = await fetch("/api/checkUser");
-
-			// If user is logged in...then redirect to messenger
-			if (isLoggedIn.status === 200) {
-				history.push("/messenger");
-			}
-		};
-		loginCheck();
-	}, [history]);
 
 	// Retrieving languages to display in our form
 	useEffect(() => {
@@ -64,85 +46,12 @@ const Register = () => {
 				email: !EmailValidator.validate(inputValues.email)
 			}));
 		}
-
-		// Checks for valid password
-		if (inputValues.password) {
-			setValidInput((validInput) => ({
-				...validInput,
-				password:
-					inputValues.password.length > 0 && inputValues.password.length < 6
-			}));
-		}
-	}, [inputValues.email, inputValues.password]);
+	}, [inputValues.email]);
 
 	// Stores data in our input state
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setInputValues({ ...inputValues, [name]: value });
-	};
-
-	// Sends data to our back end server
-	const handleSubmit = async () => {
-		// Checks for invalid email
-		if (!EmailValidator.validate(inputValues.email)) {
-			setSnackbar({
-				open: true,
-				severity: "error",
-				message: "Invalid email"
-			});
-			return;
-		}
-
-		// Password validator
-		if (inputValues.password) {
-			// Checks if they are at least 6 characters
-			if (inputValues.password.length < 6) {
-				setSnackbar({
-					open: true,
-					severity: "error",
-					message: "Password must be at least 6 characters"
-				});
-				return;
-			}
-		}
-
-		// Language selection validator
-		if (!inputValues.language) {
-			setSnackbar({
-				open: true,
-				severity: "error",
-				message: "Please select a language"
-			});
-			return;
-		}
-
-		try {
-			// Our data to send to the server
-			const res = await fetch("api/register", {
-				method: "POST",
-				body: JSON.stringify(inputValues),
-				headers: { "Content-Type": "application/json" }
-			});
-
-			// Redirect them to messenger page
-			if (res.status === 201) {
-				history.push("/messenger");
-			}
-
-			// In the event we get an error
-			const data = await res.json();
-			if (data.errors) {
-				if (data.errors.email) {
-					setSnackbar({
-						open: true,
-						severity: "error",
-						message: data.errors.email
-					});
-				}
-			}
-		} catch (err) {
-			console.log(err);
-		}
 	};
 
 	// Pressing enter submits our form
@@ -159,6 +68,45 @@ const Register = () => {
 		}
 
 		setSnackbar({ ...snackbar, open: false });
+	};
+
+	// Sends data to our back end server
+	const handleSubmit = async () => {
+		// Checks for invalid email
+		if (!EmailValidator.validate(inputValues.email)) {
+			setSnackbar({
+				open: true,
+				severity: "error",
+				message: "Invalid email"
+			});
+			return;
+		}
+
+		// Language selection validator
+		if (!inputValues.language) {
+			setSnackbar({
+				open: true,
+				severity: "error",
+				message: "Please select a language"
+			});
+			return;
+		}
+
+		try {
+			// Our data to send to the server
+			const res = await fetch("api/users/me", {
+				method: "POST",
+				body: JSON.stringify(inputValues),
+				headers: { "Content-Type": "application/json" }
+			});
+
+			// Redirect them to messenger page
+			if (res.status === 201) {
+				window.location.reload();
+			}
+		} catch (err) {
+			console.log(err);
+		}
 	};
 
 	const snackbars = (
@@ -188,27 +136,15 @@ const Register = () => {
 		);
 	});
 
-	// JSX pertaining to our form
-	const formContainer = (
-		<div className="formContainer">
-			<Box className="header" mt={2} mx={3}>
-				<p style={{ marginRight: "15px" }}>Already have an account?</p>
-				<Link to="/">
-					<Button
-						className="boxShadow registerLoginButton"
-						color="primary"
-						size="large"
-					>
-						Login
-					</Button>
-				</Link>
-			</Box>
-			<Box mt={10} mx={6}>
-				<h2 id="registerHeader">Create an account</h2>
+	return (
+		<div>
+			<Box mt={2} mx={6}>
+				<h2 id="registerHeader">Update Profile</h2>
 				<Box mt={2}>
 					<TextField
 						label="Display Name"
 						name="displayName"
+						value={inputValues.displayName}
 						onChange={(e) => handleChange(e)}
 						onKeyPress={handleKeyPress}
 						fullWidth
@@ -218,26 +154,11 @@ const Register = () => {
 					<TextField
 						label="Email"
 						name="email"
+						value={inputValues.email}
 						onChange={(e) => handleChange(e)}
 						onKeyPress={handleKeyPress}
 						error={validInput.email}
 						helperText={validInput.email ? "Enter a valid email address" : ""}
-						fullWidth
-					/>
-				</Box>
-				<Box mt={2}>
-					<TextField
-						label="Password"
-						name="password"
-						type="password"
-						onChange={(e) => handleChange(e)}
-						onKeyPress={handleKeyPress}
-						error={validInput.password}
-						helperText={
-							validInput.password
-								? "Passwords must be at least 6 characters"
-								: ""
-						}
 						fullWidth
 					/>
 				</Box>
@@ -246,7 +167,8 @@ const Register = () => {
 						<InputLabel>Select primary language</InputLabel>
 						<Select
 							name="language"
-							defaultValue=""
+							defaultValue={inputValues.language}
+							value={inputValues.language}
 							onChange={(e) => handleChange(e)}
 							onKeyPress={handleKeyPress}
 						>
@@ -262,29 +184,13 @@ const Register = () => {
 						variant="contained"
 						color="primary"
 					>
-						Register
+						Update
 					</Button>
 				</div>
 				{snackbars}
 			</Box>
 		</div>
 	);
-
-	return (
-		<div className="pageContainer">
-			<div className="sideContainer">
-				<div>
-					<img
-						id="messengerIcon"
-						src={messengerIcon}
-						alt="Message Symbol"
-					></img>
-				</div>
-				<p id="sideText">Converse with anyone in any language</p>
-			</div>
-			{formContainer}
-		</div>
-	);
 };
 
-export default Register;
+export default EditProfile;

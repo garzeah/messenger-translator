@@ -117,7 +117,7 @@ const Login = () => {
 		<div className="formContainer">
 			<Box className="header" mt={2} mx={3}>
 				<p style={{ marginRight: "15px" }}>Don't have an account?</p>
-				<Link to="/">
+				<Link to="/register">
 					<Button
 						className="boxShadow registerLoginButton"
 						color="primary"
