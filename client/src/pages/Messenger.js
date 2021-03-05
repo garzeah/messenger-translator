@@ -33,7 +33,7 @@ const Messenger = () => {
 
 			// If user is not logged in then redirect to login page
 			if (isLoggedIn.status !== 200) {
-				history.push("/login");
+				history.push("/");
 			}
 		};
 
