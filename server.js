@@ -2,7 +2,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const socketio = require("socket.io");
-const keys = require("./config/keys");
 require("dotenv").config();
 
 // Routes
@@ -11,7 +10,7 @@ const userRouter = require("./routes/userRoute");
 const convoRouter = require("./routes/convoRoute");
 
 // Connecting to remote Mongo database
-mongoose.connect(keys.mongoURI, {
+mongoose.connect(process.env.MONGO_URI, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
 	useCreateIndex: true,
