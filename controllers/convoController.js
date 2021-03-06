@@ -143,32 +143,6 @@ const sendMessagePost = async (req, res) => {
 
 		await newMessage.save();
 
-		/* 
-			Making a copy of the convo, deleting it, then saving
-			the copy so we can push it to the top of a user's list
-		*/
-
-		// // Creating a copy
-		// const copyOfConvo = await Conversation.findOne({
-		// 	id: req.body.conversationID
-		// });
-
-		// // Initializing our model to save to our DB
-		// const copyToSave = new Conversation({
-		// 	id: req.body.conversationID,
-		// 	participants: [
-		// 		{
-		// 			participant: copyOfConvo.participants[0].participant
-		// 		},
-		// 		{
-		// 			participant: copyOfConvo.participants[1].participant
-		// 		}
-		// 	]
-		// });
-
-		// // Deleting the old conversation and saving it
-		// await Conversation.deleteOne({ id: req.body.conversationID });
-		// await copyToSave.save();
 		res.sendStatus(202);
 	} catch (err) {
 		res.sendStatus(406);
