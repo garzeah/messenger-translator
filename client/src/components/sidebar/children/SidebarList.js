@@ -63,9 +63,11 @@ const SidebarList = ({
 
 	// List of conversations a user has
 	const convoListCard = Object.keys(convoList).map((_, idx, convos) => {
-		// Wrote it in this manner so we can reverse the array
-		// while returning each appropriate convo in O(n)
-		let key = convos[convoList.length - 1 - idx];
+		// Sorting our convoList by time of last message
+		const sortedConvoList = convoList.sort((a, b) => {
+			return a.lastMessage.localeCompare(b.lastMessage);
+		});
+		let key = convos[sortedConvoList.length - 1 - idx];
 
 		return (
 			<PreviewConvo
