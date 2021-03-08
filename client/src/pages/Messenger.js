@@ -20,7 +20,7 @@ const Messenger = () => {
 	// Keeps track of your current conversation
 	const [currConvo, setCurrConvo] = useState(null);
 	// Keeps track of whether message is sent and triggers re-render
-	const [isMessageSent, setIsMessageSent] = useState(false);
+	const [isMessageSent, setIsMessageSent] = useState({ status: false });
 
 	// Will be used to redirect user
 	const history = useHistory();
@@ -46,10 +46,16 @@ const Messenger = () => {
 		socket = io(SOCKET_SERVER_URL, connectionOptions);
 
 		socket.on("messageFromServer", (status) => {
-			setIsMessageSent(status);
+			setIsMessageSent((isMessageSent) => ({
+				...isMessageSent,
+				status: status
+			}));
 
 			// Setting it back to default in the event of new messages
-			setIsMessageSent(false);
+			setIsMessageSent((isMessageSent) => ({
+				...isMessageSent,
+				status: false
+			}));
 
 			// Clean up function
 			return () => {
@@ -65,9 +71,15 @@ const Messenger = () => {
 				setCurrConvo={setCurrConvo}
 				user={user}
 				setUser={setUser}
-				isMessageSent={isMessageSent}
+				isMessageSent={isMessageSent.status}
 			/>
-			{currConvo ? <Convo user={user} isMessageSent={isMessageSent} /> : null}
+			{currConvo ? (
+				<Convo
+					user={user}
+					currConvo={currConvo}
+					isMessageSent={isMessageSent.status}
+				/>
+			) : null}
 		</div>
 	);
 };
