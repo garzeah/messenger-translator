@@ -19,7 +19,7 @@ const DisplayAvatar = ({ user, width, height }) => {
 
 	const classes = useStyles();
 
-	const avatarCard = user.avatar ? (
+	let avatarCard = user.avatar ? (
 		<img
 			className={classes.avatar}
 			src={`/api/users/avatar/${user._id}`}

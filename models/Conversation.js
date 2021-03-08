@@ -14,10 +14,7 @@ const conversationSchema = new mongoose.Schema({
 				ref: "User"
 			}
 		}
-	],
-	lastMessage: {
-		type: Object
-	}
+	]
 });
 
 module.exports = mongoose.model("conversations", conversationSchema);
