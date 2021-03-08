@@ -65,7 +65,9 @@ const SidebarList = ({
 	const convoListCard = Object.keys(convoList).map((_, idx, convos) => {
 		// Sorting our convoList by time of last message
 		const sortedConvoList = convoList.sort((a, b) => {
-			return a.lastMessage.localeCompare(b.lastMessage);
+			if (a.lastMessage && b.lastMessage)
+				return a.lastMessage.localeCompare(b.lastMessage);
+			else return convoList;
 		});
 		let key = convos[sortedConvoList.length - 1 - idx];
 
