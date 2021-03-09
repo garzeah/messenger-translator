@@ -8,7 +8,8 @@ const SidebarList = ({
 	searchInput,
 	setSearchInput,
 	currConvo,
-	setCurrConvo
+	setCurrConvo,
+	isMessageSent
 }) => {
 	// Stores conversations or possible users to message
 	const [userList, setUserList] = useState({});
@@ -31,9 +32,8 @@ const SidebarList = ({
 				setConvoList(data);
 			} else setUserList(data);
 		};
-
 		retrieveLists();
-	}, [type, route, currConvo, setCurrConvo]);
+	}, [type, route, currConvo, setCurrConvo, isMessageSent]);
 
 	// List of possible users a user can add
 	let filteredUserList = Object.values(userList).reduce((filtered, user) => {
