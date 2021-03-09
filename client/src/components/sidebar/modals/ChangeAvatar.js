@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Modal } from "@material-ui/core";
 import CancelIcon from "@material-ui/icons/Cancel";
 
-import FileUpload from "./FileUpload";
+import FileUpload from "../modals/FileUpload";
 
 function getModalStyle() {
 	const top = 50;
@@ -19,15 +19,15 @@ function getModalStyle() {
 const useStyles = makeStyles((theme) => ({
 	paper: {
 		position: "absolute",
-		height: "30vh",
-		width: "70vh",
 		outline: "none",
 		backgroundColor: theme.palette.background.paper,
-		padding: theme.spacing(2, 4, 3)
+		padding: theme.spacing(4, 4, 4),
+		display: "flex",
+		flexDirection: "column"
 	}
 }));
 
-const EditAvatarModal = (props) => {
+const ChangeAvatar = (props) => {
 	const classes = useStyles();
 	// getModalStyle is not a pure function, we roll the style only on the first render
 	const [modalStyle] = useState(getModalStyle);
@@ -41,7 +41,7 @@ const EditAvatarModal = (props) => {
 		setOpen(false);
 	};
 
-	const body = (
+	const avatarModal = (
 		<div style={modalStyle} className={classes.paper}>
 			<div className="modalHeader">
 				<h2>Change Avatar</h2>
@@ -53,14 +53,14 @@ const EditAvatarModal = (props) => {
 
 	return (
 		<div>
-			<div className="modalAvatar" onClick={handleOpen}>
+			<div className="avatarButton" onClick={handleOpen}>
 				{props.children}
 			</div>
 			<Modal open={open} onClose={handleClose}>
-				{body}
+				{avatarModal}
 			</Modal>
 		</div>
 	);
 };
 
-export default EditAvatarModal;
+export default ChangeAvatar;

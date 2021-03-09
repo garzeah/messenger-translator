@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
-const keys = require("./config/keys");
+const socketio = require("socket.io");
 require("dotenv").config();
 
 // Routes
@@ -10,15 +10,17 @@ const userRouter = require("./routes/userRoute");
 const convoRouter = require("./routes/convoRoute");
 
 // Connecting to remote Mongo database
-mongoose.connect(keys.mongoURI, {
+mongoose.connect(process.env.MONGO_URI, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
 	useCreateIndex: true,
 	useFindAndModify: false
 });
 
-// Initializing express
+// Initializing express and our socket.io server
 const app = express();
+// Creates a new instance of io so we can configure server w/ sockets
+// const io = socketio(server);
 
 // Initializing Middlewares
 app.use(express.json());
@@ -41,8 +43,19 @@ if (process.env.NODE_ENV === "production") {
 	});
 }
 
-// Starting our server
+// Initializing our express server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+const expressServer = app.listen(PORT, () => {
 	console.log(`Server has started on port ${PORT}`);
+});
+// Socket server is listening to our express server
+const io = socketio(expressServer);
+
+// Socket.io related code
+io.on("connection", (socket) => {
+	socket.on("messageToServer", (msg) => {
+		console.log(msg);
+	});
+
+	socket.emit("messageFromServer", "Hello from server!");
 });

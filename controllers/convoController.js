@@ -1,3 +1,5 @@
+const cryptoRandomString = require("crypto-random-string");
+
 const User = require("../models/User");
 const Conversation = require("../models/Conversation");
 const Message = require("../models/Message");
@@ -26,11 +28,12 @@ const newConversationPost = async (req, res) => {
 
 		// If a conversation already exists return it
 		if (conversation) {
-			return res.status(200).send(conversation._id);
+			return res.status(200).send(conversation);
 		}
 
 		// Otherwise, lets create a new conversation and save it
 		const newConversation = new Conversation({
+			id: cryptoRandomString({ length: 24, type: "alphanumeric" }),
 			participants: [
 				{
 					participant: req.user._id
@@ -43,7 +46,7 @@ const newConversationPost = async (req, res) => {
 
 		// Saving it to our database and sending the new convo
 		await newConversation.save();
-		res.status(200).send(newConversation._id);
+		res.status(200).send(newConversation);
 	} catch (err) {
 		res.status(500).send(err);
 	}
@@ -69,15 +72,17 @@ const fetchAllMyConversationsGet = async (req, res) => {
 		conversations[i].participants[0].participant == req.user._id
 			? null
 			: conversationList.push({
-					conversationID: conversations[i]._id,
-					userID: conversations[i].participants[0].participant
+					conversationID: conversations[i].id,
+					userID: conversations[i].participants[0].participant,
+					lastMessage: conversations[i].lastMessage
 			  });
 
 		conversations[i].participants[1].participant == req.user._id
 			? null
 			: conversationList.push({
-					conversationID: conversations[i]._id,
-					userID: conversations[i].participants[1].participant
+					conversationID: conversations[i].id,
+					userID: conversations[i].participants[1].participant,
+					lastMessage: conversations[i].lastMessage
 			  });
 	}
 
@@ -88,14 +93,16 @@ const fetchAllMyConversationsGet = async (req, res) => {
 		if (userData) {
 			conversationList[i] = {
 				...conversationList[i],
-				firstName: userData.firstName,
-				lastName: userData.lastName,
+				_id: userData._id,
+				displayName: userData.displayName,
 				email: userData.email,
-				avatar: userData.avatar
+				avatar: userData.avatar,
+				userID: null
 			};
 		}
 	}
-	res.send(conversationList);
+
+	res.status(200).send(conversationList);
 };
 
 // Get a specific conversation and its messages
@@ -111,25 +118,35 @@ const fetchConversationGet = async (req, res) => {
 
 // Send message
 const sendMessagePost = async (req, res) => {
-	// Removing leading and ending whitespace
-	const message = req.body.message.trim();
+	let messageText = req.body.message.trim();
 
 	try {
 		// If our message is empty then
-		if (!message) return res.sendStatus(406);
+		if (!messageText) return res.sendStatus(406);
 
 		// Otherwise, message is not empty to let's save it
 		const newMessage = new Message({
-			conversationID: req.params.id,
+			conversationID: req.body.conversationID,
 			sender: req.user._id,
-			content: message,
+			content: messageText,
 			timeCreated: new Date()
 		});
 
+		// Finding conversation to save as last message
+		await Conversation.findOneAndUpdate(
+			{
+				id: req.body.conversationID
+			},
+			{ $set: { lastMessage: newMessage.timeCreated } },
+			{ new: true }
+		);
+
 		await newMessage.save();
+
 		res.sendStatus(202);
-	} catch (err) {}
-	res.sendStatus(406);
+	} catch (err) {
+		res.sendStatus(406);
+	}
 };
 
 module.exports = {
@@ -138,31 +155,3 @@ module.exports = {
 	fetchConversationGet,
 	sendMessagePost
 };
-
-// This function will later be used to push a specific conversation
-// to the top of our SidebarList when a user sends a message
-
-// // Delete that specific conversation from our collection
-// await Conversation.deleteOne({
-// 	// Searching by Sender and Recipient's ID
-// 	$and: [
-// 		{ "participants.participant": req.user._id },
-// 		{ "participants.participant": recipient._id }
-// 	]
-// });
-
-// // Initializing the conversation that exists
-// // so we can save it to our DB
-// updatedConversation = new Conversation({
-// 	participants: [
-// 		{
-// 			participant: conversation.participants[0].participant
-// 		},
-// 		{
-// 			participant: conversation.participants[1].participant
-// 		}
-// 	]
-// });
-
-// // Saving to our DB
-// await updatedConversation.save();

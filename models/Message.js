@@ -3,8 +3,7 @@ const mongoose = require("mongoose");
 // Stores message data a user sends
 const messageSchema = new mongoose.Schema({
 	conversationID: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: "Conversation"
+		type: String
 	},
 	sender: {
 		type: mongoose.Schema.Types.ObjectId,

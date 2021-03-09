@@ -7,7 +7,9 @@ const User = require("../models/User");
 const fetchAllProfilesGet = async (req, res) => {
 	try {
 		// Retrieves all user profiles and omits their id
-		const users = await User.find({});
+		const users = await User.find({
+			_id: { $nin: req.user._id }
+		});
 		res.status(200).send(users);
 	} catch (err) {
 		res.status(500).send(err);
@@ -26,6 +28,7 @@ const fetchMyProfileGet = async (req, res) => {
 // Update my profile
 const updateMyProfile = async (req, res) => {
 	try {
+		// Prevents users entering whitespace
 		Object.values(req.body).forEach((value) => {
 			if (value.trim() === "") res.status(406).send();
 		});
