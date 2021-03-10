@@ -108,13 +108,15 @@ const fetchAllMyConversationsGet = async (req, res) => {
 
 // Get a specific conversation and its messages
 const fetchConversationGet = async (req, res) => {
-	const { id, lang } = req.query;
+	// Pulling out our conversation id and whether to translate or not
+	const { id, translate } = req.query;
 
 	try {
 		// Finding all messages associated with a specific conversation
 		let conversation = await Message.find({ conversationID: id });
+
 		// If the user wants to see the original language
-		if (!lang) {
+		if (translate === "true") {
 			res.send(conversation);
 		} else {
 			// If the user wants the translated version
@@ -129,7 +131,7 @@ const fetchConversationGet = async (req, res) => {
 				if (req.user._id === conversation[i].sender) break;
 				let [translations] = await translate.translate(
 					conversation[i].content,
-					lang
+					req.user.language
 				);
 
 				// Replacing text with translations

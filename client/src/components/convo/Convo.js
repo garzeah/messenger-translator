@@ -21,9 +21,7 @@ const Conversation = ({ user, currConvo, isMessageSent }) => {
 			const retrieveMessages = async () => {
 				// Fetching user data
 				let data = await fetch(
-					`/api/conversations/?id=${currConvo.conversationID}&lang=${
-						originalLang ? "" : user.language
-					}`
+					`/api/conversations/?id=${currConvo.conversationID}&translate=${originalLang}`
 				);
 				data = await data.json();
 				setCurrConvoMessages(data);
