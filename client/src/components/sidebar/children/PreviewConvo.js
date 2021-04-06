@@ -11,6 +11,8 @@ const PreviewConvo = ({
 	setCurrConvo
 }) => {
 	const clickHandler = async () => {
+		console.log(user);
+
 		// Will send a post request to initiate a conversation
 		try {
 			// Our data to send to the server

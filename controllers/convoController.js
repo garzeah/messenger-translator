@@ -97,7 +97,7 @@ const fetchAllMyConversationsGet = async (req, res) => {
 			};
 		}
 	}
-	res.send(conversationList);
+	res.status(200).send(conversationList);
 };
 
 // Get a specific conversation and its messages
@@ -182,34 +182,17 @@ const sendMessagePost = async (req, res) => {
 			timeCreated: new Date()
 		});
 
+		// Finding conversation to save as last message
+		await Conversation.findOneAndUpdate(
+			{
+				id: req.body.conversationID
+			},
+			{ $set: { lastMessage: newMessage.timeCreated } },
+			{ new: true }
+		);
+
 		await newMessage.save();
 
-		/* 
-			Making a copy of the convo, deleting it, then saving
-			the copy so we can push it to the top of a user's list
-		*/
-
-		// Creating a copy
-		const copyOfConvo = await Conversation.findOne({
-			id: req.body.conversationID
-		});
-
-		// Initializing our model to save to our DB
-		const copyToSave = new Conversation({
-			id: req.body.conversationID,
-			participants: [
-				{
-					participant: copyOfConvo.participants[0].participant
-				},
-				{
-					participant: copyOfConvo.participants[1].participant
-				}
-			]
-		});
-
-		// Deleting the old conversation and saving it
-		await Conversation.deleteOne({ id: req.body.conversationID });
-		await copyToSave.save();
 		res.sendStatus(202);
 	} catch (err) {
 		res.sendStatus(406);

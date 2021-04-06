@@ -39,6 +39,9 @@ const Conversation = ({ user, currConvo, isMessageSent }) => {
 			_id
 		} = currConvoMessages[key];
 
+		// Fixes issue of momentary gap in time where conversation ids don't match
+		if (currConvo.conversationID !== conversationID) return null;
+
 		// Keeps track of last message to auto scroll
 		let message,
 			lastMessage = currConvoMessages.length - 1 === idx;
@@ -81,7 +84,7 @@ const Conversation = ({ user, currConvo, isMessageSent }) => {
 				</div>
 			);
 			// When you send a message
-		} else if (sender !== currConvo._id) {
+		} else {
 			return (
 				<div className="sender" key={_id}>
 					<div className="messageHeader">
@@ -93,7 +96,6 @@ const Conversation = ({ user, currConvo, isMessageSent }) => {
 				</div>
 			);
 		}
-		return null;
 	});
 
 	return (
