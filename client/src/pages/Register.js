@@ -7,8 +7,7 @@ import {
 	Snackbar,
 	FormControl,
 	InputLabel,
-	Select,
-	MenuItem
+	NativeSelect
 } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import * as EmailValidator from "email-validator";
@@ -182,9 +181,9 @@ const Register = () => {
 	// JSX for rendering a list of languages
 	const languageListCard = Object.keys(languageList).map((key) => {
 		return (
-			<MenuItem key={languageList[key].code} value={languageList[key].code}>
+			<option key={languageList[key].code} value={languageList[key].code}>
 				{languageList[key].name}
-			</MenuItem>
+			</option>
 		);
 	});
 
@@ -242,16 +241,17 @@ const Register = () => {
 					/>
 				</Box>
 				<Box mt={2} mb={4}>
-					<FormControl fullWidth>
+					<FormControl required fullWidth>
 						<InputLabel>Select primary language</InputLabel>
-						<Select
+						<NativeSelect
 							name="language"
 							defaultValue=""
 							onChange={(e) => handleChange(e)}
 							onKeyPress={handleKeyPress}
 						>
+							<option value=""></option>
 							{languageListCard}
-						</Select>
+						</NativeSelect>
 					</FormControl>
 				</Box>
 				<div className="authButton">

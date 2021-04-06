@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
-// import * as EmailValidator from "email-validator";
 import MuiAlert from "@material-ui/lab/Alert";
 import {
 	TextField,
 	Box,
 	FormControl,
 	InputLabel,
-	Select,
-	MenuItem,
+	NativeSelect,
 	Button,
 	Snackbar
 } from "@material-ui/core";
@@ -19,10 +17,9 @@ function Alert(props) {
 const EditProfile = ({ user }) => {
 	const [inputValues, setInputValues] = useState({
 		displayName: user.displayName,
-		// email: user.email,
 		language: user.language
 	});
-	// const [validInput, setValidInput] = useState({});
+
 	const [languageList, setLanguageList] = useState([]);
 	const [snackbar, setSnackbar] = useState({ open: false });
 
@@ -36,17 +33,6 @@ const EditProfile = ({ user }) => {
 		};
 		fetchLanguages();
 	}, []);
-
-	// Error handling
-	// useEffect(() => {
-	// 	// Checks for valid email
-	// 	if (inputValues.email) {
-	// 		setValidInput((validInput) => ({
-	// 			...validInput,
-	// 			email: !EmailValidator.validate(inputValues.email)
-	// 		}));
-	// 	}
-	// }, [inputValues.email]);
 
 	// Stores data in our input state
 	const handleChange = (e) => {
@@ -72,16 +58,6 @@ const EditProfile = ({ user }) => {
 
 	// Sends data to our back end server
 	const handleSubmit = async () => {
-		// Checks for invalid email
-		// if (!EmailValidator.validate(inputValues.email)) {
-		// 	setSnackbar({
-		// 		open: true,
-		// 		severity: "error",
-		// 		message: "Invalid email"
-		// 	});
-		// 	return;
-		// }
-
 		// Language selection validator
 		if (!inputValues.language) {
 			setSnackbar({
@@ -130,9 +106,9 @@ const EditProfile = ({ user }) => {
 	// JSX for rendering a list of languages
 	const languageListCard = Object.keys(languageList).map((key) => {
 		return (
-			<MenuItem key={languageList[key].code} value={languageList[key].code}>
+			<option key={languageList[key].code} value={languageList[key].code}>
 				{languageList[key].name}
-			</MenuItem>
+			</option>
 		);
 	});
 
@@ -150,32 +126,19 @@ const EditProfile = ({ user }) => {
 						fullWidth
 					/>
 				</Box>
-				{/*
-				<Box mt={2}>
-					<TextField
-						label="Email"
-						name="email"
-						value={inputValues.email}
-						onChange={(e) => handleChange(e)}
-						onKeyPress={handleKeyPress}
-						error={validInput.email}
-						helperText={validInput.email ? "Enter a valid email address" : ""}
-						fullWidth
-					/>
-				</Box>
-				*/}
 				<Box mt={2} mb={4}>
 					<FormControl fullWidth>
-						<InputLabel>Select primary language</InputLabel>
-						<Select
+						<InputLabel shrink>Select Primary Language</InputLabel>
+						<NativeSelect
 							name="language"
 							defaultValue={inputValues.language}
 							value={inputValues.language}
 							onChange={(e) => handleChange(e)}
 							onKeyPress={handleKeyPress}
 						>
+							<option value=""></option>
 							{languageListCard}
-						</Select>
+						</NativeSelect>
 					</FormControl>
 				</Box>
 				<div className="authButton">
