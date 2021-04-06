@@ -121,6 +121,7 @@ const fetchConversationGet = async (req, res) => {
 				}
 			}
 
+			// Filters in messages that need to be translated
 			recipientMessages.forEach((message) => {
 				if (!message.languages.includes(req.user.language)) {
 					filteredRecipientMessages = [...filteredRecipientMessages, message];
