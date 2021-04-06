@@ -4,7 +4,7 @@ import { Switch } from "@material-ui/core";
 import DisplayAvatar from "../../DisplayAvatar";
 import "../Convo.css";
 
-const ConvoHeader = ({ currConvo, setOriginalLang }) => {
+const ConvoHeader = ({ currConvo, setIsTranslated }) => {
 	return (
 		<div className="convoHeader">
 			<div>
@@ -19,7 +19,7 @@ const ConvoHeader = ({ currConvo, setOriginalLang }) => {
 			<div>
 				<p>Original Language</p>
 				<Switch
-					onChange={(e) => setOriginalLang(e.target.checked)}
+					onChange={(e) => setIsTranslated(!e.target.checked)}
 					color="primary"
 				/>
 			</div>

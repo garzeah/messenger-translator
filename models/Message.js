@@ -9,9 +9,17 @@ const messageSchema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "User"
 	},
-	content: {
-		type: String
-	},
+	languages: [
+		{
+			type: String
+		}
+	],
+	contents: [
+		{
+			language: String,
+			content: String
+		}
+	],
 	timeCreated: {
 		type: String,
 		default: new Date()
