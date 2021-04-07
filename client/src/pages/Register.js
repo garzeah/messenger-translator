@@ -144,6 +144,28 @@ const Register = () => {
 		}
 	};
 
+	// Lets users demo the app
+	const handleDemoClick = async () => {
+		try {
+			// Our data to send to the server
+			const res = await fetch("/api/login", {
+				method: "POST",
+				body: JSON.stringify({
+					email: "johndoe@gmail.com",
+					password: "password"
+				}),
+				headers: { "Content-Type": "application/json" }
+			});
+
+			// Redirect them to messenger page
+			if (res.status === 200) {
+				history.push("/messenger");
+			}
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
 	// Pressing enter submits our form
 	const handleKeyPress = (e) => {
 		if (e.which === 13) {
@@ -201,6 +223,17 @@ const Register = () => {
 						Login
 					</Button>
 				</Link>
+				<Box mx={2}>
+					<Button
+						className="boxShadow demoButton"
+						onClick={handleDemoClick}
+						variant="contained"
+						color="primary"
+						size="large"
+					>
+						Demo
+					</Button>
+				</Box>
 			</Box>
 			<Box mt={10} mx={6}>
 				<h2 id="registerHeader">Create an account</h2>
@@ -241,7 +274,7 @@ const Register = () => {
 					/>
 				</Box>
 				<Box mt={2} mb={4}>
-					<FormControl required fullWidth>
+					<FormControl fullWidth>
 						<InputLabel>Select primary language</InputLabel>
 						<NativeSelect
 							name="language"

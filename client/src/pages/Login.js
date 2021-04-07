@@ -86,6 +86,7 @@ const Login = () => {
 		}
 	};
 
+	// Lets users demo the app
 	const handleDemoClick = async () => {
 		try {
 			// Our data to send to the server
