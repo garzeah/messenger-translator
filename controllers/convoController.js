@@ -125,6 +125,8 @@ const fetchConversationGet = async (req, res) => {
 			recipientMessages.forEach((message) => {
 				if (!message.languages.includes(req.user.language)) {
 					filteredRecipientMessages = [...filteredRecipientMessages, message];
+				} else {
+					filteredRecipientMessages = [...filteredRecipientMessages, message];
 				}
 			});
 
@@ -156,7 +158,10 @@ const fetchConversationGet = async (req, res) => {
 				);
 			}
 
-			return res.send(messages);
+			// Getting updated version of our messages
+			const updatedMessages = await Message.find({ conversationID: id });
+
+			return res.send(updatedMessages);
 		}
 
 		res.send(messages);
