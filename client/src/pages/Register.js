@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link, useHistory } from "react-router-dom";
 import {
 	Button,
@@ -11,7 +11,9 @@ import {
 } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import * as EmailValidator from "email-validator";
+import { connect } from "react-redux";
 
+import { checkUser } from "../components/actions";
 import messengerIcon from "../assets/images/message.png";
 import "./RegisterLogin.css";
 
@@ -19,7 +21,7 @@ function Alert(props) {
 	return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-const Register = () => {
+const Register = ({ isLoggedIn, checkUser }) => {
 	// State management for input, languages, valid input and snackbars
 	const [inputValues, setInputValues] = useState({});
 	const [languageList, setLanguageList] = useState([]);
@@ -29,19 +31,18 @@ const Register = () => {
 	// Will be used to redirect user
 	const history = useHistory();
 
-	// Retrieves user information
-	useEffect(() => {
-		const loginCheck = async () => {
-			// Checking to see if user is logged in
-			const isLoggedIn = await fetch("/api/checkUser");
+	// Creating a memoized version of checkUser
+	const memoizedCheckUser = useCallback(() => {
+		checkUser();
+	}, [checkUser]);
 
-			// If user is logged in...then redirect to messenger
-			if (isLoggedIn.status === 200) {
-				history.push("/messenger");
-			}
-		};
-		loginCheck();
-	}, [history]);
+	// Checks if user is logged in
+	useEffect(() => {
+		memoizedCheckUser();
+
+		// If user is logged in, redirect them to messenger page
+		if (isLoggedIn === 200) history.push("/messenger");
+	}, [memoizedCheckUser, isLoggedIn, history]);
 
 	// Retrieving languages to display in our form
 	useEffect(() => {
@@ -320,4 +321,14 @@ const Register = () => {
 	);
 };
 
-export default Register;
+const mapStateToProps = (state) => {
+	return { isLoggedIn: state.user.isLoggedIn };
+};
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		checkUser: () => dispatch(checkUser())
+	};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Register);
