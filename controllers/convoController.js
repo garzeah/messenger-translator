@@ -1,4 +1,8 @@
 const cryptoRandomString = require("crypto-random-string");
+const { Translate } = require("@google-cloud/translate").v2;
+const GOOGLE_APPLICATION_CREDENTIALS = JSON.parse(
+	process.env.GOOGLE_APPLICATION_CREDENTIALS
+);
 
 const User = require("../models/User");
 const Conversation = require("../models/Conversation");
@@ -62,26 +66,20 @@ const fetchAllMyConversationsGet = async (req, res) => {
 		"participants.participant": req.user._id
 	});
 
-	// Find every participant that does not equal user's _id
-	// and store in conversationList
-	for (let i = 0; i < conversations.length; i++) {
-		// Making sure we do not store our user ID when fetching conversations
-		// Fix this later, it's really inefficient but its fine since we
-		// have 2 users max, although if we were to have more than 2 participants
-		// it would be better to optimize this
-		conversations[i].participants[0].participant == req.user._id
-			? null
-			: conversationList.push({
-					conversationID: conversations[i].id,
-					userID: conversations[i].participants[0].participant
-			  });
-
-		conversations[i].participants[1].participant == req.user._id
-			? null
-			: conversationList.push({
-					conversationID: conversations[i].id,
-					userID: conversations[i].participants[1].participant
-			  });
+	// Find every participant that does not equal user's _id and store in conversationList
+	// Optimize this code in the event of group chats
+	for (key1 in conversations) {
+		for (key2 in conversations[key1].participants) {
+			if (
+				String(conversations[key1].participants[key2].participant) !==
+				String(req.user._id)
+			) {
+				conversationList.push({
+					conversationID: conversations[key1].id,
+					userID: conversations[key1].participants[key2].participant
+				});
+			}
+		}
 	}
 
 	// Going to append the user's data to the conversationList
@@ -104,10 +102,64 @@ const fetchAllMyConversationsGet = async (req, res) => {
 
 // Get a specific conversation and its messages
 const fetchConversationGet = async (req, res) => {
+	// Pulling out our conversation id and whether to translate or not
+	const { id, translate } = req.query;
+
 	try {
 		// Finding all messages associated with a specific conversation
-		const conversation = await Message.find({ conversationID: req.params.id });
-		res.send(conversation);
+		let messages = await Message.find({ conversationID: id });
+
+		if (translate === "true") {
+			// Contains recipient's messages and recipient's messages that need to be translated
+			let recipientMessages = [],
+				filteredRecipientMessages = [];
+
+			// Storing the recipient's messages to be translated
+			for (key in messages) {
+				if (String(req.user._id) !== String(messages[key].sender)) {
+					recipientMessages = [...recipientMessages, messages[key]];
+				}
+			}
+
+			// Filters in messages that need to be translated
+			recipientMessages.forEach((message) => {
+				if (!message.languages.includes(req.user.language)) {
+					filteredRecipientMessages = [...filteredRecipientMessages, message];
+				}
+			});
+
+			// If the messages have been translated already return messages
+			if (filteredRecipientMessages.length === 0) return res.send(messages);
+
+			// Otherwise, we translate remaining messages
+			const googleTranslate = new Translate({
+				credentials: GOOGLE_APPLICATION_CREDENTIALS,
+				projectId: GOOGLE_APPLICATION_CREDENTIALS.project_id
+			});
+
+			for (key in filteredRecipientMessages) {
+				// Translating the original message
+				let [translations] = await googleTranslate.translate(
+					filteredRecipientMessages[key].contents[0].content,
+					req.user.language
+				);
+
+				// Adding the translated message to our database
+				await Message.updateOne(
+					{ _id: filteredRecipientMessages[key]._id },
+					{
+						$push: {
+							languages: req.user.language,
+							contents: { language: req.user.language, content: translations }
+						}
+					}
+				);
+			}
+
+			return res.send(messages);
+		}
+
+		res.send(messages);
 	} catch (err) {
 		res.sendStatus(404);
 	}
@@ -125,7 +177,8 @@ const sendMessagePost = async (req, res) => {
 		const newMessage = new Message({
 			conversationID: req.body.conversationID,
 			sender: req.user._id,
-			content: messageText,
+			languages: [req.user.language],
+			contents: { language: req.user.language, content: messageText },
 			timeCreated: new Date()
 		});
 
