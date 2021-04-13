@@ -53,6 +53,7 @@ const SendMessage = ({ currConvo }) => {
 
 			// Clearing input and telling server it was successful
 			if (res.status === 202) {
+				console.log("yo");
 				setMessage("");
 
 				// Connecting to our SOCKET_SERVER_URL and creating an event
