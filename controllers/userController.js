@@ -38,8 +38,8 @@ const updateMyProfile = async (req, res) => {
 		});
 
 		// Hashing our updated password
-		if (req.body.password)
-			req.body.password = await bcrypt.hash(req.body.password, 8);
+		// if (req.body.password)
+		// 	req.body.password = await bcrypt.hash(req.body.password, 8);
 
 		await User.findOneAndUpdate({ _id: req.user._id }, req.body);
 
@@ -91,7 +91,6 @@ const fetchLanguages = async (req, res) => {
 		});
 		// Lists available translation language with their names in English (the default).
 		const [languages] = await translate.getLanguages();
-		console.log(languages);
 
 		res.status(200).send(languages);
 	} catch (error) {

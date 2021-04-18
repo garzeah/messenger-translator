@@ -7,8 +7,7 @@ const userSchema = new mongoose.Schema({
 	displayName: {
 		type: String,
 		required: [true, "Please enter a display name"],
-		trim: true,
-		lowercase: true
+		trim: true
 	},
 	email: {
 		type: String,
