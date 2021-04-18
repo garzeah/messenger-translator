@@ -1,137 +1,67 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link, useHistory } from "react-router-dom";
+import { connect } from "react-redux";
+
 import { Button, TextField, Box, Snackbar } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 
+import { checkUser, userLogin } from "../components/actions/";
 import messengerIcon from "../assets/images/message.png";
 import "./RegisterLogin.css";
 
-function Alert(props) {
-	return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+const Alert = (props) => <MuiAlert elevation={6} variant="filled" {...props} />;
 
-const Login = () => {
-	// State management for input and snackbar
-	const [inputValues, setInputValues] = useState({
-		email: "",
-		password: ""
-	});
-	const [snackbar, setSnackbar] = useState({
-		open: false,
-		severity: "",
-		message: ""
-	});
+const Login = ({ isLoggedIn, snackbarMessage, checkUser, userLogin }) => {
+	// State management for form and snackbar
+	const [formValues, setFormValues] = useState({});
+	const [snackbar, setSnackbar] = useState({});
 
 	// Will be used to redirect user
 	const history = useHistory();
 
-	// Retrieves user information
+	// Creating a memoized version of checkUser
+	const memoizedCheckUser = useCallback(() => {
+		checkUser();
+	}, [checkUser]);
+
+	// Checks if user is logged in
 	useEffect(() => {
-		const loginCheck = async () => {
-			// Checking to see if user is logged in
-			const isLoggedIn = await fetch("/api/checkUser");
+		let unmounted = false;
 
-			// If user is logged in...then redirect to messenger
-			if (isLoggedIn.status === 200) {
-				history.push("/messenger");
+		if (!unmounted) {
+			memoizedCheckUser();
+
+			// If user is logged in, redirect them to messenger page
+			if (isLoggedIn === 200) history.push("/messenger");
+
+			// If we have an error to display, show snackbar
+			if (snackbarMessage) {
+				setSnackbar({
+					open: true,
+					severity: "error",
+					message: snackbarMessage
+				});
 			}
-		};
-		loginCheck();
-	}, [history]);
+		}
 
-	// Stores data in out input state
+		return () => (unmounted = true);
+	}, [memoizedCheckUser, isLoggedIn, history, snackbarMessage]);
+
+	// Stores data in our form state
 	const handleChange = (e) => {
 		const { name, value } = e.target;
-		setInputValues({ ...inputValues, [name]: value });
-	};
-
-	// Sends data to our back end server
-	const handleSubmit = async () => {
-		// Checks for missing input
-		if (emptyInput()) {
-			setSnackbar({
-				open: true,
-				severity: "error",
-				message: "Missing input"
-			});
-			return;
-		}
-
-		try {
-			// Our data to send to the server
-			const res = await fetch("/api/login", {
-				method: "POST",
-				body: JSON.stringify(inputValues),
-				headers: { "Content-Type": "application/json" }
-			});
-
-			// Redirect them to messenger page
-			if (res.status === 200) {
-				history.push("/messenger");
-			}
-
-			// In the event we get an error
-			const data = await res.json();
-			if (data.errors) {
-				if (data.errors.email || data.errors.password) {
-					setSnackbar({
-						open: true,
-						severity: "error",
-						message: data.errors.email || data.errors.password
-					});
-				}
-			}
-		} catch (err) {
-			console.log(err);
-		}
-	};
-
-	// Lets users demo the app
-	const handleDemoClick = async () => {
-		try {
-			// Our data to send to the server
-			const res = await fetch("/api/login", {
-				method: "POST",
-				body: JSON.stringify({
-					email: "johndoe@gmail.com",
-					password: "password"
-				}),
-				headers: { "Content-Type": "application/json" }
-			});
-
-			// Redirect them to messenger page
-			if (res.status === 200) {
-				history.push("/messenger");
-			}
-		} catch (err) {
-			console.log(err);
-		}
+		setFormValues({ ...formValues, [name]: value });
 	};
 
 	// Pressing enter submits our form
 	const handleKeyPress = (e) => {
-		if (e.which === 13) {
-			handleSubmit();
-		}
+		if (e.which === 13) userLogin(formValues);
 	};
 
 	// Closes our snackbar
 	const handleClose = (event, reason) => {
-		if (reason === "clickaway") {
-			return;
-		}
-
-		setSnackbar({ ...snackbar, open: false });
-	};
-
-	// Error validation
-	const emptyInput = () => {
-		for (let key in inputValues) {
-			if (inputValues[key] === "") {
-				return true;
-			}
-		}
-		return false;
+		if (reason === "clickaway") return;
+		setSnackbar({ ...snackbar, open: false, severity: "error" });
 	};
 
 	// JSX pertaining to our form
@@ -151,7 +81,9 @@ const Login = () => {
 				<Box mx={2}>
 					<Button
 						className="boxShadow demoButton"
-						onClick={handleDemoClick}
+						onClick={() =>
+							userLogin({ email: "johndoe@gmail.com", password: "password" })
+						}
 						variant="contained"
 						color="primary"
 						size="large"
@@ -184,7 +116,7 @@ const Login = () => {
 				<div className="authButton">
 					<Button
 						className="messengerButton"
-						onClick={handleSubmit}
+						onClick={() => userLogin(formValues)}
 						size="large"
 						variant="contained"
 						color="primary"
@@ -226,4 +158,11 @@ const Login = () => {
 	);
 };
 
-export default Login;
+const mapStateToProps = (state) => {
+	return {
+		isLoggedIn: state.user.isLoggedIn,
+		snackbarMessage: state.user.snackbarMessage
+	};
+};
+
+export default connect(mapStateToProps, { checkUser, userLogin })(Login);
