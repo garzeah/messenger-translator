@@ -53,7 +53,7 @@ const Settings = ({ user }) => {
 
 	const body = (
 		<div style={modalStyle} className={classes.paper}>
-			<div className="modalHeader">
+			<div className="modalHeaderProfile">
 				<CancelIcon className="modalExit" onClick={() => setOpen(false)} />
 			</div>
 			<EditProfile user={user} />

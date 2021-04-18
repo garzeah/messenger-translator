@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import * as EmailValidator from "email-validator";
+// import * as EmailValidator from "email-validator";
 import MuiAlert from "@material-ui/lab/Alert";
 import {
 	TextField,
@@ -19,10 +19,10 @@ function Alert(props) {
 const EditProfile = ({ user }) => {
 	const [inputValues, setInputValues] = useState({
 		displayName: user.displayName,
-		email: user.email,
+		// email: user.email,
 		language: user.language
 	});
-	const [validInput, setValidInput] = useState({});
+	// const [validInput, setValidInput] = useState({});
 	const [languageList, setLanguageList] = useState([]);
 	const [snackbar, setSnackbar] = useState({ open: false });
 
@@ -38,15 +38,15 @@ const EditProfile = ({ user }) => {
 	}, []);
 
 	// Error handling
-	useEffect(() => {
-		// Checks for valid email
-		if (inputValues.email) {
-			setValidInput((validInput) => ({
-				...validInput,
-				email: !EmailValidator.validate(inputValues.email)
-			}));
-		}
-	}, [inputValues.email]);
+	// useEffect(() => {
+	// 	// Checks for valid email
+	// 	if (inputValues.email) {
+	// 		setValidInput((validInput) => ({
+	// 			...validInput,
+	// 			email: !EmailValidator.validate(inputValues.email)
+	// 		}));
+	// 	}
+	// }, [inputValues.email]);
 
 	// Stores data in our input state
 	const handleChange = (e) => {
@@ -73,14 +73,14 @@ const EditProfile = ({ user }) => {
 	// Sends data to our back end server
 	const handleSubmit = async () => {
 		// Checks for invalid email
-		if (!EmailValidator.validate(inputValues.email)) {
-			setSnackbar({
-				open: true,
-				severity: "error",
-				message: "Invalid email"
-			});
-			return;
-		}
+		// if (!EmailValidator.validate(inputValues.email)) {
+		// 	setSnackbar({
+		// 		open: true,
+		// 		severity: "error",
+		// 		message: "Invalid email"
+		// 	});
+		// 	return;
+		// }
 
 		// Language selection validator
 		if (!inputValues.language) {
@@ -150,6 +150,7 @@ const EditProfile = ({ user }) => {
 						fullWidth
 					/>
 				</Box>
+				{/*
 				<Box mt={2}>
 					<TextField
 						label="Email"
@@ -162,6 +163,7 @@ const EditProfile = ({ user }) => {
 						fullWidth
 					/>
 				</Box>
+				*/}
 				<Box mt={2} mb={4}>
 					<FormControl fullWidth>
 						<InputLabel>Select primary language</InputLabel>
