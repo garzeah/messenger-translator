@@ -1,33 +1,26 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import io from "socket.io-client";
 
 import Sidebar from "../components/sidebar/Sidebar";
 import Convo from "../components/convo/Convo";
 import "./Messenger.css";
-
-// Connection options to bypass CORS warning
-const connectionOptions = {
-	"force new connection": true,
-	reconnectionAttempts: "Infinity",
-	timeout: 10000,
-	transports: ["websocket"]
-};
+import {
+	connectionOptions,
+	socketServerURL
+} from "../utilities/socketConfiguration";
 
 // Initializing our socket based on dev or prod server
-let SOCKET_SERVER_URL;
-if (process.env.NODE_ENV === "production") {
-	SOCKET_SERVER_URL = "https://decipher-io.herokuapp.com/";
-} else {
-	SOCKET_SERVER_URL = "http://localhost:5000/";
-}
+let socket,
+	SOCKET_SERVER_URL = socketServerURL();
 
 const Messenger = () => {
 	// Your profile information
 	const [user, setUser] = useState({});
 	// Keeps track of your current conversation
 	const [currConvo, setCurrConvo] = useState(null);
-	const socketRef = useRef();
+	// Keeps track of whether message is sent and triggers re-render
+	const [isMessageSent, setIsMessageSent] = useState(false);
 
 	// Will be used to redirect user
 	const history = useHistory();
@@ -40,7 +33,7 @@ const Messenger = () => {
 
 			// If user is not logged in then redirect to login page
 			if (isLoggedIn.status !== 200) {
-				history.push("/login");
+				history.push("/");
 			}
 		};
 
@@ -50,11 +43,18 @@ const Messenger = () => {
 	// Handles all the socket.io related code
 	useEffect(() => {
 		// Connecting to our SOCKET_SERVER_URL and creating an event
-		socketRef.current = io(SOCKET_SERVER_URL, connectionOptions);
+		socket = io(SOCKET_SERVER_URL, connectionOptions);
 
-		socketRef.current.emit("messageToServer", "Hello from client!");
-		socketRef.current.on("messageFromServer", (msg) => {
-			console.log(msg);
+		socket.on("messageFromServer", (status) => {
+			setIsMessageSent(status);
+
+			// Setting it back to default in the event of new messages
+			setIsMessageSent(false);
+
+			// Clean up function
+			return () => {
+				socket.disconnect();
+			};
 		});
 	}, []);
 
@@ -65,8 +65,15 @@ const Messenger = () => {
 				setCurrConvo={setCurrConvo}
 				user={user}
 				setUser={setUser}
+				isMessageSent={isMessageSent}
 			/>
-			{currConvo ? <Convo currConvo={currConvo} user={user} /> : null}
+			{currConvo ? (
+				<Convo
+					user={user}
+					currConvo={currConvo}
+					isMessageSent={isMessageSent}
+				/>
+			) : null}
 		</div>
 	);
 };

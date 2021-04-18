@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
-import { Button, TextField, Box, Snackbar } from "@material-ui/core";
+import {
+	Button,
+	TextField,
+	Box,
+	Snackbar,
+	FormControl,
+	InputLabel,
+	NativeSelect
+} from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import * as EmailValidator from "email-validator";
 
@@ -12,8 +20,9 @@ function Alert(props) {
 }
 
 const Register = () => {
-	// State management for input, valid input and snackbars
+	// State management for input, languages, valid input and snackbars
 	const [inputValues, setInputValues] = useState({});
+	const [languageList, setLanguageList] = useState([]);
 	const [validInput, setValidInput] = useState({});
 	const [snackbar, setSnackbar] = useState({ open: false });
 
@@ -33,6 +42,17 @@ const Register = () => {
 		};
 		loginCheck();
 	}, [history]);
+
+	// Retrieving languages to display in our form
+	useEffect(() => {
+		const fetchLanguages = async () => {
+			// Checking to see if user is logged in
+			let languages = await fetch("/api/users/languages");
+			languages = await languages.json();
+			setLanguageList(languages);
+		};
+		fetchLanguages();
+	}, []);
 
 	// Error handling
 	useEffect(() => {
@@ -85,6 +105,16 @@ const Register = () => {
 			}
 		}
 
+		// Language selection validator
+		if (!inputValues.language) {
+			setSnackbar({
+				open: true,
+				severity: "error",
+				message: "Please select a language"
+			});
+			return;
+		}
+
 		try {
 			// Our data to send to the server
 			const res = await fetch("api/register", {
@@ -108,6 +138,28 @@ const Register = () => {
 						message: data.errors.email
 					});
 				}
+			}
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	// Lets users demo the app
+	const handleDemoClick = async () => {
+		try {
+			// Our data to send to the server
+			const res = await fetch("/api/login", {
+				method: "POST",
+				body: JSON.stringify({
+					email: "johndoe@gmail.com",
+					password: "password"
+				}),
+				headers: { "Content-Type": "application/json" }
+			});
+
+			// Redirect them to messenger page
+			if (res.status === 200) {
+				history.push("/messenger");
 			}
 		} catch (err) {
 			console.log(err);
@@ -148,12 +200,21 @@ const Register = () => {
 		</div>
 	);
 
+	// JSX for rendering a list of languages
+	const languageListCard = Object.keys(languageList).map((key) => {
+		return (
+			<option key={languageList[key].code} value={languageList[key].code}>
+				{languageList[key].name}
+			</option>
+		);
+	});
+
 	// JSX pertaining to our form
 	const formContainer = (
 		<div className="formContainer">
 			<Box className="header" mt={2} mx={3}>
 				<p style={{ marginRight: "15px" }}>Already have an account?</p>
-				<Link to="/login">
+				<Link to="/">
 					<Button
 						className="boxShadow registerLoginButton"
 						color="primary"
@@ -162,6 +223,17 @@ const Register = () => {
 						Login
 					</Button>
 				</Link>
+				<Box mx={2}>
+					<Button
+						className="boxShadow demoButton"
+						onClick={handleDemoClick}
+						variant="contained"
+						color="primary"
+						size="large"
+					>
+						Demo
+					</Button>
+				</Box>
 			</Box>
 			<Box mt={10} mx={6}>
 				<h2 id="registerHeader">Create an account</h2>
@@ -185,7 +257,7 @@ const Register = () => {
 						fullWidth
 					/>
 				</Box>
-				<Box mt={2} mb={4}>
+				<Box mt={2}>
 					<TextField
 						label="Password"
 						name="password"
@@ -200,6 +272,20 @@ const Register = () => {
 						}
 						fullWidth
 					/>
+				</Box>
+				<Box mt={2} mb={4}>
+					<FormControl fullWidth>
+						<InputLabel>Select primary language</InputLabel>
+						<NativeSelect
+							name="language"
+							defaultValue=""
+							onChange={(e) => handleChange(e)}
+							onKeyPress={handleKeyPress}
+						>
+							<option value=""></option>
+							{languageListCard}
+						</NativeSelect>
+					</FormControl>
 				</Box>
 				<div className="authButton">
 					<Button

@@ -7,8 +7,7 @@ const userSchema = new mongoose.Schema({
 	displayName: {
 		type: String,
 		required: [true, "Please enter a display name"],
-		trim: true,
-		lowercase: true
+		trim: true
 	},
 	email: {
 		type: String,
@@ -23,6 +22,10 @@ const userSchema = new mongoose.Schema({
 		required: [true, "Please enter a password"],
 		trim: true,
 		minLength: [6, "Minimum password length is 6 characters"]
+	},
+	language: {
+		type: String,
+		required: [true, "Please select a language"]
 	},
 	avatar: {
 		type: Buffer

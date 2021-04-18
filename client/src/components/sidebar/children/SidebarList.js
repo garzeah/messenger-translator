@@ -8,7 +8,8 @@ const SidebarList = ({
 	searchInput,
 	setSearchInput,
 	currConvo,
-	setCurrConvo
+	setCurrConvo,
+	isMessageSent
 }) => {
 	// Stores conversations or possible users to message
 	const [userList, setUserList] = useState({});
@@ -31,16 +32,15 @@ const SidebarList = ({
 				setConvoList(data);
 			} else setUserList(data);
 		};
-
 		retrieveLists();
-	}, [type, route, currConvo, setCurrConvo]);
+	}, [type, route, currConvo, setCurrConvo, isMessageSent]);
 
 	// List of possible users a user can add
 	let filteredUserList = Object.values(userList).reduce((filtered, user) => {
 		// Filtering out users by their email or name
 		if (
-			user.displayName.includes(searchInput) ||
-			user.email.includes(searchInput)
+			user.displayName.toLowerCase().includes(searchInput) ||
+			user.email.toLowerCase().includes(searchInput)
 		) {
 			filtered.push(user);
 		}
@@ -65,7 +65,9 @@ const SidebarList = ({
 	const convoListCard = Object.keys(convoList).map((_, idx, convos) => {
 		// Sorting our convoList by time of last message
 		const sortedConvoList = convoList.sort((a, b) => {
-			return a.lastMessage.localeCompare(b.lastMessage);
+			if (a.lastMessage && b.lastMessage)
+				return a.lastMessage.localeCompare(b.lastMessage);
+			else return convoList;
 		});
 		let key = convos[sortedConvoList.length - 1 - idx];
 

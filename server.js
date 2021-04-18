@@ -14,7 +14,8 @@ mongoose.connect(process.env.MONGO_URI, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
 	useCreateIndex: true,
-	useFindAndModify: false
+	useFindAndModify: false,
+	poolSize: 100
 });
 
 // Initializing express and our socket.io server
@@ -53,9 +54,9 @@ const io = socketio(expressServer);
 
 // Socket.io related code
 io.on("connection", (socket) => {
-	socket.on("messageToServer", (msg) => {
-		console.log(msg);
+	// Means message was successfully sent
+	socket.on("messageToServer", (status) => {
+		// Returning true to all clients so we can update their state
+		io.emit("messageFromServer", status);
 	});
-
-	socket.emit("messageFromServer", "Hello from server!");
 });

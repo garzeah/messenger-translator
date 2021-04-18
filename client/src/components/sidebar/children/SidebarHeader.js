@@ -26,7 +26,7 @@ const SidebarHeader = ({ user, setUser }) => {
 				<h2 style={{ marginLeft: "15px" }}>{user.displayName}</h2>
 			</div>
 			<div className="sidebarHeaderUserSettings">
-				<Settings />
+				<Settings user={user} />
 			</div>
 		</div>
 	);

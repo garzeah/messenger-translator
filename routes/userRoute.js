@@ -42,4 +42,7 @@ router.get(
 	userController.fetchMyAvatarGet
 );
 
+// Fetches languages that can be used for translating
+router.get("/api/users/languages", userController.fetchLanguages);
+
 module.exports = router;

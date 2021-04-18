@@ -1,13 +1,10 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { Modal, Menu, MenuItem, makeStyles } from "@material-ui/core/";
 import { useHistory } from "react-router-dom";
-import Modal from "@material-ui/core/Modal";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import CancelIcon from "@material-ui/icons/Cancel";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
 
-// import EditDisplayName from "../modals/EditDisplayName";
+import EditProfile from "../modals/EditProfile";
 
 function getModalStyle() {
 	const top = 50;
@@ -23,15 +20,14 @@ function getModalStyle() {
 const useStyles = makeStyles((theme) => ({
 	paper: {
 		position: "absolute",
-		height: "70vh",
-		width: "80vh",
 		outline: "none",
+		width: "70vh",
 		backgroundColor: theme.palette.background.paper,
-		padding: theme.spacing(2, 4, 3)
+		padding: theme.spacing(2, 2, 2)
 	}
 }));
 
-const Settings = () => {
+const Settings = ({ user }) => {
 	const classes = useStyles();
 	// getModalStyle is not a pure function, we roll the style only on the first render
 	const [modalStyle] = useState(getModalStyle);
@@ -48,7 +44,7 @@ const Settings = () => {
 
 			// Redirect them to messenger page
 			if (res.status === 200) {
-				history.push("/login");
+				history.push("/");
 			}
 		} catch (err) {
 			console.log(err);
@@ -57,11 +53,10 @@ const Settings = () => {
 
 	const body = (
 		<div style={modalStyle} className={classes.paper}>
-			<div className="modalHeader">
-				<h2>Edit Display Name</h2>
+			<div className="modalHeaderProfile">
 				<CancelIcon className="modalExit" onClick={() => setOpen(false)} />
 			</div>
-			{/*	<EditDisplayName /> */}
+			<EditProfile user={user} />
 		</div>
 	);
 
@@ -72,7 +67,7 @@ const Settings = () => {
 				open={Boolean(anchorEl)}
 				onClose={() => setAnchorEl(null)}
 			>
-				{/*<MenuItem onClick={() => setOpen(true)}>Edit Display Name</MenuItem>*/}
+				<MenuItem onClick={() => setOpen(true)}>Edit Profile</MenuItem>
 				<MenuItem onClick={handleLogout}>Logout</MenuItem>
 			</Menu>
 			<MoreHorizIcon

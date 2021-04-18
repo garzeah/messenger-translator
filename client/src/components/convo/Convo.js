@@ -4,9 +4,10 @@ import DisplayAvatar from "../DisplayAvatar";
 import ConvoHeader from "./children/ConvoHeader";
 import SendMessage from "./children/SendMessage";
 
-const Conversation = ({ currConvo }) => {
-	// Stores messages
+const Conversation = ({ user, currConvo, isMessageSent }) => {
+	// States for retrieving messages and whether to translate or not
 	const [currConvoMessages, setCurrConvoMessages] = useState({});
+	const [isTranslated, setIsTranslated] = useState(true);
 
 	// Will scroll us to the bottom of a conversation
 	const setRef = useCallback((node) => {
@@ -20,20 +21,20 @@ const Conversation = ({ currConvo }) => {
 			const retrieveMessages = async () => {
 				// Fetching user data
 				let data = await fetch(
-					`/api/conversations/${currConvo.conversationID}`
+					`/api/conversations/?id=${currConvo.conversationID}&translate=${isTranslated}`
 				);
 				data = await data.json();
 				setCurrConvoMessages(data);
 			};
 			retrieveMessages();
 		}
-	}, [currConvo]);
+	}, [currConvo, isMessageSent, isTranslated, user]);
 
 	const messagesCard = Object.keys(currConvoMessages).map((key, idx) => {
 		let {
 			conversationID,
 			sender,
-			content,
+			contents,
 			timeCreated,
 			_id
 		} = currConvoMessages[key];
@@ -42,7 +43,8 @@ const Conversation = ({ currConvo }) => {
 		if (currConvo.conversationID !== conversationID) return null;
 
 		// Keeps track of last message to auto scroll
-		let lastMessage = currConvoMessages.length - 1 === idx;
+		let message,
+			lastMessage = currConvoMessages.length - 1 === idx;
 
 		// Making our timeCreated variable more understandable
 		// let date = new Date(timeCreated).toLocaleDateString();
@@ -52,6 +54,18 @@ const Conversation = ({ currConvo }) => {
 		time = time.split(":");
 		time.pop();
 		time = time.join(":");
+
+		// Fixes issue of momentary gap in time where conversation ids don't match
+		if (currConvo.conversationID !== conversationID) return null;
+
+		// Strips messages from our database
+		for (let i = 0; i < contents.length; i++) {
+			// Only wanted translated messages
+			if (isTranslated && contents[i].language === user.language) {
+				message = contents[i].content;
+				// Only want non-translated messages
+			} else message = contents[0].content;
+		}
 
 		// When you receive a message
 		if (sender === currConvo._id) {
@@ -64,7 +78,7 @@ const Conversation = ({ currConvo }) => {
 							<p style={{ marginLeft: "5px" }}>{time}</p>
 						</div>
 						<div id="recipientContent" ref={lastMessage ? setRef : null}>
-							<p>{content}</p>
+							<p>{message}</p>
 						</div>
 					</div>
 				</div>
@@ -77,7 +91,7 @@ const Conversation = ({ currConvo }) => {
 						<p>{time}</p>
 					</div>
 					<div id="senderContent" ref={lastMessage ? setRef : null}>
-						<p>{content}</p>
+						<p>{message}</p>
 					</div>
 				</div>
 			);
@@ -86,7 +100,7 @@ const Conversation = ({ currConvo }) => {
 
 	return (
 		<div className="convoContainer">
-			<ConvoHeader currConvo={currConvo} />
+			<ConvoHeader currConvo={currConvo} setIsTranslated={setIsTranslated} />
 			<div className="convoBody">{messagesCard}</div>
 			<SendMessage currConvo={currConvo} />
 		</div>

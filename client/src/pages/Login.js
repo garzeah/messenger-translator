@@ -86,6 +86,28 @@ const Login = () => {
 		}
 	};
 
+	// Lets users demo the app
+	const handleDemoClick = async () => {
+		try {
+			// Our data to send to the server
+			const res = await fetch("/api/login", {
+				method: "POST",
+				body: JSON.stringify({
+					email: "johndoe@gmail.com",
+					password: "password"
+				}),
+				headers: { "Content-Type": "application/json" }
+			});
+
+			// Redirect them to messenger page
+			if (res.status === 200) {
+				history.push("/messenger");
+			}
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
 	// Pressing enter submits our form
 	const handleKeyPress = (e) => {
 		if (e.which === 13) {
@@ -117,7 +139,7 @@ const Login = () => {
 		<div className="formContainer">
 			<Box className="header" mt={2} mx={3}>
 				<p style={{ marginRight: "15px" }}>Don't have an account?</p>
-				<Link to="/">
+				<Link to="/register">
 					<Button
 						className="boxShadow registerLoginButton"
 						color="primary"
@@ -126,6 +148,17 @@ const Login = () => {
 						Register
 					</Button>
 				</Link>
+				<Box mx={2}>
+					<Button
+						className="boxShadow demoButton"
+						onClick={handleDemoClick}
+						variant="contained"
+						color="primary"
+						size="large"
+					>
+						Demo
+					</Button>
+				</Box>
 			</Box>
 			<Box mt={10} mx={6}>
 				<h2 id="loginHeader">Welcome back!</h2>

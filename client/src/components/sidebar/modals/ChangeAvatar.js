@@ -43,7 +43,7 @@ const ChangeAvatar = (props) => {
 
 	const avatarModal = (
 		<div style={modalStyle} className={classes.paper}>
-			<div className="modalHeader">
+			<div className="modalHeaderAvatar">
 				<h2>Change Avatar</h2>
 				<CancelIcon className="modalExit" onClick={handleClose} />
 			</div>

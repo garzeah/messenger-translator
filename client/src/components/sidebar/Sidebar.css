@@ -55,17 +55,6 @@
 	overflow-y: auto;
 }
 
-.activeConvo {
-	display: flex;
-	align-items: center;
-	background: #ffffff;
-	box-shadow: inset -1px 0 0 darken(lightgray, 10);
-	border-radius: 10px;
-	padding: 10px 0px 10px 5px;
-	margin: 10px 0px 10px 0;
-	filter: drop-shadow(0 0 0.03rem #c1cbd9);
-}
-
 .previewConvo {
 	display: flex;
 	align-items: center;
@@ -83,14 +72,30 @@
 	border-radius: 10px;
 }
 
+.activeConvo {
+	display: flex;
+	align-items: center;
+	background: #ffffff;
+	box-shadow: inset -1px 0 0 darken(lightgray, 10);
+	border-radius: 10px;
+	padding: 10px 0px 10px 5px;
+	margin: 10px 0px 10px 0;
+	filter: drop-shadow(0 0 0.03rem #c1cbd9);
+}
+
 #convoItemOwner {
 	margin-left: 15px;
 }
 
 /* Modals */
-.modalHeader {
+.modalHeaderAvatar {
 	display: flex;
 	justify-content: space-between;
+}
+
+.modalHeaderProfile {
+	display: flex;
+	justify-content: flex-end;
 }
 
 .modalExit:hover {
